@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* TruSaba Design Tokens */
+:root {
+    --bg: oklch(1 0 0);
+    --surface: oklch(0.984 0.003 247.9);
+    --fg: oklch(0.22 0 0);
+    --muted: oklch(0.55 0.023 264.4);
+    --border: oklch(0.928 0.006 264.5);
+    --accent: oklch(0.552 0.184 255.7);
+    --accent-hex: #066FDA;
+    --secondary: oklch(0.847 0.17 87.3);
+    --secondary-hex: #FCC415;
+    --success: oklch(0.627 0.17 149.2);
+    --warn: oklch(0.795 0.162 86);
+    --danger: oklch(0.577 0.215 27.3);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --radius-full: 999px;
+    --shadow: 0 4px 16px oklch(0.22 0.04 255 / 0.08);
+    --shadow-sm: 0 2px 8px oklch(0.22 0.04 255 / 0.06);
+    --font: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --nav-h: 64px;
+    --phone-w: 390px;
+}
+
+body {
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--fg);
+    background: oklch(0.94 0.01 255);
+    -webkit-font-smoothing: antialiased;
+}
