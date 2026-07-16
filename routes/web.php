@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\ItineraryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,13 +44,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Itinerary
-    Route::get('/itineraries', function () {
-        return view('itinerary.index');
-    })->name('itineraries.index');
-
-    Route::get('/itineraries/{id}', function () {
-        return view('itinerary.show');
-    })->name('itineraries.show');
+    Route::get('/itineraries', [ItineraryController::class, 'index'])->name('itineraries.index');
+    Route::post('/itineraries/generate', [ItineraryController::class, 'generate'])->name('itineraries.generate');
+    Route::get('/itineraries/{id}/loading', [ItineraryController::class, 'loading'])->name('itineraries.loading');
+    Route::get('/itineraries/{id}/status', [ItineraryController::class, 'status'])->name('itineraries.status');
+    Route::get('/itineraries/{id}', [ItineraryController::class, 'show'])->name('itineraries.show');
+    Route::put('/itineraries/{id}', [ItineraryController::class, 'update'])->name('itineraries.update');
+    Route::delete('/itineraries/{id}', [ItineraryController::class, 'destroy'])->name('itineraries.destroy');
 
     // Booking
     Route::get('/bookings', function () {
