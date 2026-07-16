@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TruSaba · Traveller Prototype Hub</title>
+  <link rel="stylesheet" href="trusaba.css" />
+</head>
+<body class="hub-body">
+  <div class="hub" data-od-id="hub">
+    <!-- Hero -->
+    <header class="hub-hero" data-od-id="hub-hero">
+      <div class="hub-hero-copy">
+        <div class="hub-brand-row">
+          <img src="logo.jpeg" alt="TruSaba" class="hub-logo" />
+          <span class="badge badge-gold">PWA Traveller</span>
+        </div>
+        <p class="eyebrow hub-eyebrow">AI travel companion</p>
+        <h1 data-od-id="hub-title">TruSaba — trip pribadi, didampingi sampai pulang</h1>
+        <p class="hub-lead" data-od-id="hub-lead">
+          Prototipe multi-screen untuk traveller muda. Dari login, profil trip, itinerary AI Bali, booking hotel, sampai SOS & chat — satu alur yang bisa diklik.
+        </p>
+        <div class="hub-actions" data-od-id="hub-actions">
+          <a class="btn btn-primary" href="splash.html" data-od-id="cta-start">Mulai alur demo</a>
+          <a class="btn btn-secondary" href="today.html" data-od-id="cta-live">Loncat ke Hari Ini</a>
+        </div>
+        <ul class="hub-meta" data-od-id="hub-meta">
+          <li><strong>12</strong> layar</li>
+          <li><strong>Bali</strong> demo trip</li>
+          <li><strong>#066FDA</strong> · <strong>#FCC415</strong></li>
+        </ul>
+      </div>
+      <aside class="hub-preview" data-od-id="hub-preview" aria-hidden="true">
+        <div class="hub-phone-stack">
+          <div class="hub-phone-card hub-phone-back">
+            <div class="hub-phone-bar"></div>
+            <div class="hub-phone-lines">
+              <span></span><span></span><span class="short"></span>
+            </div>
+            <div class="hub-phone-chip gold"></div>
+          </div>
+          <div class="hub-phone-card hub-phone-front">
+            <div class="hub-phone-bar"></div>
+            <div class="hub-phone-brand">
+              <img src="logo.jpeg" alt="" />
+              <span>TruSaba</span>
+            </div>
+            <div class="hub-phone-lines">
+              <span></span><span class="mid"></span><span class="short"></span>
+            </div>
+            <div class="hub-phone-cta"></div>
+          </div>
+        </div>
+        <p class="caption hub-preview-cap">Mobile-first · 390px frame</p>
+      </aside>
+    </header>
+
+    <!-- Aesthetic bar (CD note, compact) -->
+    <section class="hub-brief" data-od-id="hub-aesthetic">
+      <h2>Bar estetika yang dikunci</h2>
+      <div class="hub-brief-grid">
+        <div>
+          <p class="eyebrow">Audience</p>
+          <p>Traveller muda · mobile-first · butuh companion, bukan katalog kaku</p>
+        </div>
+        <div>
+          <p class="eyebrow">Feel</p>
+          <p>Friendly · trustworthy · rounded · whitespace · bukan korporat</p>
+        </div>
+        <div>
+          <p class="eyebrow">Hindari</p>
+          <p>Gradient ungu, emoji-icon, metric palsu, card left-border AI</p>
+        </div>
+        <div>
+          <p class="eyebrow">Referensi mood</p>
+          <p>Airbnb warmth + travel companion AI (bukan airline enterprise)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Journey stages -->
+    <section class="hub-journey" data-od-id="hub-journey">
+      <div class="hub-section-head">
+        <div>
+          <p class="eyebrow">User journey</p>
+          <h2>Empat bab · satu story</h2>
+        </div>
+        <p class="muted small">Klik kartu untuk buka layar. Alur utama: Auth → Profil → AI → Itinerary → Booking → On-trip.</p>
+      </div>
+
+      <!-- Stage 1 -->
+      <div class="hub-stage" data-od-id="stage-enter">
+        <div class="hub-stage-label">
+          <span class="hub-stage-num">01</span>
+          <div>
+            <h3>Masuk & kenalan</h3>
+            <p class="small muted">Akun + profil trip agar AI punya konteks</p>
+          </div>
+        </div>
+        <div class="hub-stage-cards">
+          <a class="hub-card featured" href="auth.html" data-od-id="card-auth">
+            <div class="hub-card-top">
+              <span class="hub-card-num">00</span>
+              <span class="badge badge-gold">Start</span>
+            </div>
+            <h3>Login / Sign Up</h3>
+            <p>Email, daftar, & login Google</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="onboarding.html" data-od-id="card-onboarding">
+            <div class="hub-card-top">
+              <span class="hub-card-num">01</span>
+            </div>
+            <h3>Profil Trip</h3>
+            <p>4 step: destinasi, hobby, budget, tanggal</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="loading-ai.html" data-od-id="card-loading">
+            <div class="hub-card-top">
+              <span class="hub-card-num">02</span>
+            </div>
+            <h3>AI Menyusun</h3>
+            <p>Progress menenangkan + microcopy</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="hub-stage" data-od-id="stage-plan">
+        <div class="hub-stage-label">
+          <span class="hub-stage-num">02</span>
+          <div>
+            <h3>Rencana & booking</h3>
+            <p class="small muted">Itinerary Bali 3 hari + flow hotel sampai voucher</p>
+          </div>
+        </div>
+        <div class="hub-stage-cards">
+          <a class="hub-card featured" href="itinerary.html" data-od-id="card-itinerary">
+            <div class="hub-card-top">
+              <span class="hub-card-num">03</span>
+              <span class="badge badge-blue">Core</span>
+            </div>
+            <h3>Hasil Itinerary</h3>
+            <p>Timeline Day 1–3 + breakdown budget</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="hotel-detail.html" data-od-id="card-hotel">
+            <div class="hub-card-top"><span class="hub-card-num">04a</span></div>
+            <h3>Detail Hotel</h3>
+            <p>Kamar, tanggal, harga / malam</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="payment.html" data-od-id="card-payment">
+            <div class="hub-card-top"><span class="hub-card-num">04b</span></div>
+            <h3>Pembayaran</h3>
+            <p>Ringkasan + metode bayar</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="booking-success.html" data-od-id="card-voucher">
+            <div class="hub-card-top"><span class="hub-card-num">04c</span></div>
+            <h3>Voucher</h3>
+            <p>Sukses + kode & QR digital</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="hub-stage" data-od-id="stage-trip">
+        <div class="hub-stage-label">
+          <span class="hub-stage-num">03</span>
+          <div>
+            <h3>Di perjalanan</h3>
+            <p class="small muted">Companion harian, darurat, & bantuan AI</p>
+          </div>
+        </div>
+        <div class="hub-stage-cards">
+          <a class="hub-card featured" href="today.html" data-od-id="card-today">
+            <div class="hub-card-top">
+              <span class="hub-card-num">05–06</span>
+              <span class="badge badge-danger-soft">SOS</span>
+            </div>
+            <h3>Hari Ini + SOS</h3>
+            <p>Timeline live, voucher, FAB darurat</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="chat.html" data-od-id="card-chat">
+            <div class="hub-card-top"><span class="hub-card-num">07</span></div>
+            <h3>Chat AI CS</h3>
+            <p>Bubble AI & user + kirim pesan</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="hub-stage" data-od-id="stage-record">
+        <div class="hub-stage-label">
+          <span class="hub-stage-num">04</span>
+          <div>
+            <h3>Catatan & riwayat</h3>
+            <p class="small muted">Bukti pengeluaran + history trip</p>
+          </div>
+        </div>
+        <div class="hub-stage-cards">
+          <a class="hub-card" href="upload-receipt.html" data-od-id="card-upload">
+            <div class="hub-card-top"><span class="hub-card-num">08</span></div>
+            <h3>Upload Bukti</h3>
+            <p>Foto, nominal, kategori, catatan</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+          <a class="hub-card" href="history.html" data-od-id="card-history">
+            <div class="hub-card-top"><span class="hub-card-num">09–10</span></div>
+            <h3>History + Nav</h3>
+            <p>Tab traveling / transaksi + bottom nav</p>
+            <span class="hub-card-go">Buka →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resource map -->
+    <section class="hub-resources" data-od-id="hub-resources">
+      <div class="hub-section-head">
+        <div>
+          <p class="eyebrow">Creative Director</p>
+          <h2>Resource map · putaran ini</h2>
+        </div>
+      </div>
+      <div class="hub-resource-grid">
+        <article class="hub-resource">
+          <p class="eyebrow">Design files</p>
+          <h3>Canonical set</h3>
+          <p class="small muted">`brand-spec.md`, `trusaba.css`, 11 screen HTML, `logo.jpeg` — sumber kebenaran visual.</p>
+        </article>
+        <article class="hub-resource">
+          <p class="eyebrow">Skills matched</p>
+          <h3>creative-director + brand</h3>
+          <p class="small muted">Diagnose → direction → edit. Brand tokens sudah terkunci; tidak re-pick palette.</p>
+        </article>
+        <article class="hub-resource">
+          <p class="eyebrow">Plugins / MCP</p>
+          <h3>Belum perlu setup</h3>
+          <p class="small muted">Asset foto hotel/destinasi bisa naik level lewat fal / image MCP di putaran berikutnya.</p>
+        </article>
+        <article class="hub-resource">
+          <p class="eyebrow">Next confirm</p>
+          <h3>Merchant & Admin?</h3>
+          <p class="small muted">Traveller selesai. Dashboard desktop merchant/admin = bab produk berikutnya.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="hub-footer" data-od-id="hub-footer">
+      <img src="logo.jpeg" alt="" width="28" height="28" />
+      <p class="small muted">TruSaba Traveller · prototype hub · brand #066FDA / #FCC415</p>
+    </footer>
+  </div>
+</body>
+</html>

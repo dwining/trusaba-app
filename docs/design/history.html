@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TruSaba · History</title>
+  <link rel="stylesheet" href="trusaba.css" />
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" data-od-id="phone-history">
+      <div class="status-bar"><span>9:41</span><span class="icons">●●● 100%</span></div>
+      <div class="app-header" data-od-id="history-header">
+        <img class="logo" src="logo.jpeg" alt="TruSaba" />
+        <div class="title-block">
+          <p class="eyebrow">Profil</p>
+          <h1>Riwayat</h1>
+        </div>
+        <a class="icon-btn" href="upload-receipt.html" aria-label="Upload" data-od-id="btn-add-tx">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        </a>
+      </div>
+
+      <div class="tabs" data-od-id="history-tabs">
+        <button type="button" class="tab active" data-tab="trips" data-od-id="tab-trips">Riwayat Traveling</button>
+        <button type="button" class="tab" data-tab="tx" data-od-id="tab-tx">Riwayat Transaksi</button>
+      </div>
+
+      <div class="app-body" data-od-id="history-body">
+        <div class="pad stack" id="panelTrips" data-od-id="panel-trips">
+          <a class="list-card" href="itinerary.html" data-od-id="trip-bali">
+            <div class="ph-img thumb" style="background:linear-gradient(145deg,oklch(0.55 0.12 255 / 0.35),oklch(0.8 0.1 160 / 0.4))"></div>
+            <div class="meta">
+              <h3>Bali</h3>
+              <p class="small muted">12–15 Agu 2026 · 3 hari</p>
+              <span class="badge badge-success" style="margin-top:4px">On trip</span>
+            </div>
+            <span class="amount muted small">Rp 4,85jt</span>
+          </a>
+          <div class="list-card" data-od-id="trip-yogyakarta">
+            <div class="ph-img thumb" style="background:linear-gradient(145deg,oklch(0.7 0.08 80 / 0.4),oklch(0.55 0.08 40 / 0.35))"></div>
+            <div class="meta">
+              <h3>Yogyakarta</h3>
+              <p class="small muted">2–5 Mar 2026 · 3 hari</p>
+              <span class="badge badge-blue" style="margin-top:4px">Selesai</span>
+            </div>
+            <span class="amount muted small">Rp 2,1jt</span>
+          </div>
+          <div class="list-card" data-od-id="trip-bandung">
+            <div class="ph-img thumb" style="background:linear-gradient(145deg,oklch(0.65 0.1 150 / 0.3),oklch(0.55 0.1 200 / 0.35))"></div>
+            <div class="meta">
+              <h3>Bandung</h3>
+              <p class="small muted">18–20 Des 2025 · 2 hari</p>
+              <span class="badge badge-blue" style="margin-top:4px">Selesai</span>
+            </div>
+            <span class="amount muted small">Rp 1,4jt</span>
+          </div>
+        </div>
+
+        <div class="pad stack" id="panelTx" hidden data-od-id="panel-tx">
+          <div class="list-card" data-od-id="tx-1">
+            <div class="meta">
+              <h3>Seminyak Palm Hotel</h3>
+              <p class="small muted">12 Agu · Akomodasi</p>
+              <span class="badge badge-success" style="margin-top:4px">Lunas</span>
+            </div>
+            <span class="amount" style="color:var(--fg)">Rp 2.345.000</span>
+          </div>
+          <div class="list-card" data-od-id="tx-2">
+            <div class="meta">
+              <h3>Bebek Bengil</h3>
+              <p class="small muted">13 Agu · Makan</p>
+              <span class="badge badge-success" style="margin-top:4px">Lunas</span>
+            </div>
+            <span class="amount">Rp 185.000</span>
+          </div>
+          <div class="list-card" data-od-id="tx-3">
+            <div class="meta">
+              <h3>Private driver Ubud</h3>
+              <p class="small muted">13 Agu · Transport</p>
+              <span class="badge badge-warn" style="margin-top:4px">Pending</span>
+            </div>
+            <span class="amount">Rp 450.000</span>
+          </div>
+          <div class="list-card" data-od-id="tx-4">
+            <div class="meta">
+              <h3>Tegalalang Entry</h3>
+              <p class="small muted">13 Agu · Wisata</p>
+              <span class="badge badge-success" style="margin-top:4px">Lunas</span>
+            </div>
+            <span class="amount">Rp 50.000</span>
+          </div>
+          <a class="btn btn-secondary btn-block" href="upload-receipt.html" style="margin-top:8px" data-od-id="btn-upload-from-history">+ Upload bukti baru</a>
+        </div>
+      </div>
+
+      <nav class="bottom-nav" data-od-id="bottom-nav">
+        <a class="nav-item" href="today.html">
+          <svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a class="nav-item" href="hotel-detail.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 5V3M16 5V3"/></svg>
+          Booking
+        </a>
+        <a class="nav-item" href="chat.html">
+          <svg viewBox="0 0 24 24"><path d="M5 18l-1 3 3-1h9a3 3 0 003-3V7a3 3 0 00-3-3H8a3 3 0 00-3 3v11z"/></svg>
+          Chat
+        </a>
+        <a class="nav-item active" href="history.html">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0116 0"/></svg>
+          Profil
+        </a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var trips = document.getElementById('panelTrips');
+      var tx = document.getElementById('panelTx');
+      var tabs = document.querySelectorAll('.tab');
+      function show(id) {
+        trips.hidden = id !== 'trips';
+        tx.hidden = id !== 'tx';
+        tabs.forEach(function (t) {
+          t.classList.toggle('active', t.getAttribute('data-tab') === id);
+        });
+      }
+      tabs.forEach(function (t) {
+        t.addEventListener('click', function () { show(t.getAttribute('data-tab')); });
+      });
+      if (location.search.indexOf('tab=tx') !== -1) show('tx');
+    })();
+  </script>
+</body>
+</html>

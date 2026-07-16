@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TruSaba · Upload Bukti</title>
+  <link rel="stylesheet" href="trusaba.css" />
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" data-od-id="phone-upload">
+      <div class="status-bar"><span>9:41</span><span class="icons">●●● 100%</span></div>
+      <div class="app-header" data-od-id="upload-header">
+        <a class="icon-btn" href="history.html" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <div class="title-block">
+          <p class="eyebrow">Pengeluaran</p>
+          <h1>Upload bukti</h1>
+        </div>
+      </div>
+
+      <div class="app-body no-nav has-sticky" data-od-id="upload-body">
+        <div class="pad">
+          <div class="field">
+            <label class="field-label">Foto / file bukti</label>
+            <div class="upload-zone" id="uploadZone" data-od-id="upload-zone" role="button" tabindex="0">
+              <svg viewBox="0 0 24 24"><path d="M12 16V6"/><path d="M8 10l4-4 4 4"/><path d="M4 18h16"/></svg>
+              <p style="font-weight:600;font-size:14px">Ketuk untuk unggah</p>
+              <p class="caption" style="margin-top:4px">JPG, PNG, atau PDF · max 5 MB</p>
+              <p class="small" id="fileName" style="margin-top:8px;color:var(--accent-hex);font-weight:550" hidden></p>
+            </div>
+            <input type="file" id="fileInput" accept="image/*,.pdf" hidden />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="amount">Nominal <span class="req">*</span></label>
+            <input class="input mono" id="amount" type="text" inputmode="numeric" placeholder="Rp 0" data-od-id="input-nominal" />
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="cat">Kategori <span class="req">*</span></label>
+            <select class="select" id="cat" data-od-id="input-kategori">
+              <option value="">Pilih kategori</option>
+              <option>Akomodasi</option>
+              <option selected>Makan</option>
+              <option>Wisata</option>
+              <option>Transport</option>
+              <option>Oleh-oleh</option>
+              <option>Lainnya</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="note">Catatan (opsional)</label>
+            <textarea class="textarea" id="note" placeholder="Contoh: makan siang Bebek Bengil" data-od-id="input-catatan"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="sticky-cta" data-od-id="upload-cta">
+        <button type="button" class="btn btn-primary btn-block" id="btnSave" data-od-id="btn-simpan">Simpan</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var zone = document.getElementById('uploadZone');
+      var file = document.getElementById('fileInput');
+      var name = document.getElementById('fileName');
+      zone.addEventListener('click', function () { file.click(); });
+      zone.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') file.click(); });
+      file.addEventListener('change', function () {
+        if (file.files[0]) {
+          name.hidden = false;
+          name.textContent = file.files[0].name;
+          zone.classList.add('drag');
+        }
+      });
+      document.getElementById('btnSave').addEventListener('click', function () {
+        var amt = document.getElementById('amount').value.trim();
+        var cat = document.getElementById('cat').value;
+        if (!amt || !cat) {
+          alert('Nominal dan kategori wajib diisi.');
+          return;
+        }
+        window.location.href = 'history.html?tab=tx';
+      });
+    })();
+  </script>
+</body>
+</html>

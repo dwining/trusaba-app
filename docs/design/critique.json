@@ -1,0 +1,26 @@
+{
+  "kind": "critique-panel",
+  "score": 4,
+  "axes": {
+    "clarity": {
+      "score": 5,
+      "notes": "Index hub now frames product journey in 4 stages instead of flat file list; primary CTA starts auth flow."
+    },
+    "hierarchy": {
+      "score": 4,
+      "notes": "Hero → aesthetic bar → journey stages → resource map. Featured cards highlight Start/Core/SOS."
+    },
+    "typography": {
+      "score": 5,
+      "notes": "Plus Jakarta; display clamp; mono for meta tokens; ALL CAPS tracking floor enforced (0.06em)."
+    },
+    "motion": {
+      "score": 3,
+      "notes": "Card hover lift only on hub; screen-level motion remains in loading/SOS. Optional next: micro entrance."
+    },
+    "brand": {
+      "score": 5,
+      "notes": "Tokens + logo preserved; gold/blue badges sparingly; no indigo/purple-gradient slop."
+    }
+  }
+}

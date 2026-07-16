@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TruSaba · Chat AI</title>
+  <link rel="stylesheet" href="trusaba.css" />
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" data-od-id="phone-chat">
+      <div class="status-bar"><span>9:41</span><span class="icons">●●● 100%</span></div>
+      <div class="app-header" data-od-id="chat-header">
+        <a class="icon-btn" href="today.html" aria-label="Kembali">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </a>
+        <div class="title-block">
+          <p class="eyebrow">Customer Service</p>
+          <h1>Chat AI TruSaba</h1>
+        </div>
+        <span class="badge badge-success">Online</span>
+      </div>
+
+      <div class="app-body" style="padding-bottom:calc(var(--nav-h) + 72px)" data-od-id="chat-body">
+        <div class="chat-thread" id="thread" data-od-id="chat-thread">
+          <div class="bubble bubble-ai" data-od-id="msg-ai-1">
+            Halo! Aku asisten TruSaba. Ada yang bisa dibantu untuk trip Bali-mu?
+            <span class="time">09:12</span>
+          </div>
+          <div class="bubble bubble-user" data-od-id="msg-user-1">
+            Jam berapa check-out hotelku?
+            <span class="time">09:13</span>
+          </div>
+          <div class="bubble bubble-ai" data-od-id="msg-ai-2">
+            Check-out Seminyak Palm Hotel pukul <strong>12:00 WITA</strong> (14 Agu). Mau aku set pengingat 1 jam sebelumnya?
+            <span class="time">09:13</span>
+          </div>
+          <div class="bubble bubble-user" data-od-id="msg-user-2">
+            Ya, tolong. Juga info cuaca Nusa Penida besok.
+            <span class="time">09:14</span>
+          </div>
+          <div class="bubble bubble-ai" data-od-id="msg-ai-3">
+            Siap — pengingat check-out aktif. Cuaca Nusa Penida besok: cerah berawan, 28–31°, ombak sedang. Cocok untuk day trip Kelingking.
+            <span class="time">09:14</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-bar" data-od-id="chat-input-bar">
+        <input class="input" id="chatInput" type="text" placeholder="Tulis pesan…" autocomplete="off" data-od-id="chat-input" />
+        <button type="button" class="chat-send" id="chatSend" aria-label="Kirim" data-od-id="chat-send">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+      </div>
+
+      <nav class="bottom-nav" data-od-id="bottom-nav">
+        <a class="nav-item" href="today.html">
+          <svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1v-9.5z"/></svg>
+          Home
+        </a>
+        <a class="nav-item" href="hotel-detail.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 5V3M16 5V3"/></svg>
+          Booking
+        </a>
+        <a class="nav-item active" href="chat.html">
+          <svg viewBox="0 0 24 24"><path d="M5 18l-1 3 3-1h9a3 3 0 003-3V7a3 3 0 00-3-3H8a3 3 0 00-3 3v11z"/></svg>
+          Chat
+        </a>
+        <a class="nav-item" href="history.html">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0116 0"/></svg>
+          Profil
+        </a>
+      </nav>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var input = document.getElementById('chatInput');
+      var thread = document.getElementById('thread');
+      var replies = [
+        'Baik, aku catat. Ada lagi yang ingin dicek di itinerary?',
+        'Kalau butuh ubah jadwal, bilang saja — aku bantu sesuaikan.',
+        'Voucher aktifmu masih valid. Butuh arah ke lokasi berikutnya?'
+      ];
+      var ri = 0;
+      function send() {
+        var t = input.value.trim();
+        if (!t) return;
+        var now = new Date();
+        var time = String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
+        var u = document.createElement('div');
+        u.className = 'bubble bubble-user';
+        u.innerHTML = t.replace(/</g,'&lt;') + '<span class="time">' + time + '</span>';
+        thread.appendChild(u);
+        input.value = '';
+        setTimeout(function () {
+          var a = document.createElement('div');
+          a.className = 'bubble bubble-ai';
+          a.innerHTML = replies[ri % replies.length] + '<span class="time">' + time + '</span>';
+          ri++;
+          thread.appendChild(a);
+        }, 600);
+      }
+      document.getElementById('chatSend').addEventListener('click', send);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') send();
+      });
+    })();
+  </script>
+</body>
+</html>

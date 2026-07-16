@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>TruSaba · AI Menyusun Itinerary</title>
+  <link rel="stylesheet" href="trusaba.css" />
+</head>
+<body>
+  <div class="stage">
+    <div class="phone" data-od-id="phone-loading">
+      <div class="status-bar"><span>9:41</span><span class="icons">●●● 100%</span></div>
+      <div class="app-body no-nav" style="display:flex;flex-direction:column">
+        <div class="loading-wrap" data-od-id="loading-ai">
+          <div class="plane-orbit" data-od-id="loading-orbit">
+            <div class="ring"></div>
+            <div class="core">
+              <img src="logo.jpeg" alt="TruSaba" />
+            </div>
+          </div>
+          <p class="eyebrow" style="color:var(--accent-hex);margin-bottom:8px">AI TruSaba</p>
+          <h1 style="margin-bottom:8px" data-od-id="loading-title">Sedang menyusun itinerary</h1>
+          <p class="muted small" style="max-width:280px;margin:0 auto">Trip Bali · 3 hari disesuaikan profil, budget, dan minatmu.</p>
+          <div class="progress-soft" data-od-id="loading-progress"><div class="fill"></div></div>
+          <p class="microcopy" id="micro" data-od-id="loading-microcopy">Sedang mencari tempat terbaik untukmu…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var lines = [
+        'Sedang mencari tempat terbaik untukmu…',
+        'Menyesuaikan budget akomodasi di Ubud & Seminyak…',
+        'Mencari restoran lokal yang cocok dengan seleramu…',
+        'Menyusun jadwal harian biar tidak kelelahan…',
+        'Hampir siap — packing virtual dulu ya ✨'
+      ];
+      // no emoji in icons; microcopy can be warm text only - fix last line
+      lines[4] = 'Hampir siap — packing virtual dulu ya…';
+      var i = 0;
+      var el = document.getElementById('micro');
+      var t = setInterval(function () {
+        i = (i + 1) % lines.length;
+        el.style.opacity = '0';
+        setTimeout(function () {
+          el.textContent = lines[i];
+          el.style.opacity = '1';
+        }, 220);
+      }, 1100);
+      setTimeout(function () {
+        clearInterval(t);
+        window.location.href = 'itinerary.html';
+      }, 4800);
+    })();
+  </script>
+</body>
+</html>
