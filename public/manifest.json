@@ -1,0 +1,22 @@
+{
+  "name": "TruSaba",
+  "short_name": "TruSaba",
+  "description": "AI travel companion — trip personal, dari rencana sampai pulang",
+  "start_url": "/splash",
+  "display": "standalone",
+  "background_color": "#066FDA",
+  "theme_color": "#066FDA",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/logo.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

@@ -1083,5 +1083,12 @@
     </script>
     @endif
     @stack('scripts')
+
+    {{-- PWA Service Worker --}}
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+    }
+    </script>
 </body>
 </html>
