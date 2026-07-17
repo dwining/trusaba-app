@@ -32,7 +32,6 @@ class ProfileController extends Controller
             'hobbies.*' => ['string'],
             'interests' => ['nullable', 'array'],
             'interests.*' => ['string'],
-            'default_budget' => ['nullable', 'integer', 'min:0'],
         ], [
             'email.unique' => 'Email sudah digunakan.',
             'birth_date.before' => 'Tanggal lahir tidak valid.',
@@ -56,7 +55,6 @@ class ProfileController extends Controller
                 'phone' => $validated['phone'] ?? $user->travellerProfile?->phone,
                 'hobbies' => $validated['hobbies'] ?? $user->travellerProfile?->hobbies ?? [],
                 'interests' => $validated['interests'] ?? $user->travellerProfile?->interests ?? [],
-                'default_budget' => $validated['default_budget'] ?? $user->travellerProfile?->default_budget,
             ]
         );
 
@@ -64,7 +62,7 @@ class ProfileController extends Controller
         $redirectTo = $request->input('redirect_to', 'history');
 
         if ($redirectTo === 'onboarding') {
-            return redirect()->route('onboarding');
+            return redirect()->route('dashboard')->with('toast', 'Profil berhasil disimpan. Sekarang buat itinerary-mu!');
         }
 
         return redirect()->route('history')->with('toast', 'Profil berhasil disimpan.');

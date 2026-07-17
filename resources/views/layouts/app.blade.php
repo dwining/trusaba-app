@@ -70,6 +70,7 @@
             gap: 12px;
             padding: 8px 20px 12px;
             flex-shrink: 0;
+            border-bottom: 1px solid oklch(0.928 0.006 264.5);
         }
         .app-header .logo {
             width: 36px; height: 36px;
@@ -602,6 +603,40 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .app-toast {
+            position: absolute;
+            left: 16px; right: 16px;
+            top: 56px;
+            z-index: 30;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: var(--bg);
+            color: var(--fg);
+            font-size: 14px;
+            font-weight: 550;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 24px oklch(0.22 0.04 255 / 0.12);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-8px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .app-toast::before {
+            content: "";
+            width: 4px;
+            height: 24px;
+            border-radius: 2px;
+            background: var(--success);
+            flex-shrink: 0;
+        }
+        .app-toast.show {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
 
         /* ── Splash ── */
         .splash-bg {
@@ -990,10 +1025,20 @@
 <body>
     <div class="stage">
         <div class="phone" data-od-id="phone-{{ $page ?? 'main' }}">
-            {{-- Status Bar --}}
-            <div class="status-bar">
-                <span>9:41</span>
-                <span class="icons" style="display:flex;gap:6px;align-items:center">●●● 100%</span>
+            {{-- App Header --}}
+            <div class="app-header">
+                <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
+                <div class="title-block">
+                    <h1>TruSaba</h1>
+                </div>
+                @auth
+                <form method="POST" action="{{ route('logout') }}" style="margin:0">
+                    @csrf
+                    <button type="submit" class="icon-btn" aria-label="Keluar" style="border:none;width:36px;height:36px">
+                        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+                    </button>
+                </form>
+                @endauth
             </div>
 
             {{-- Content --}}
@@ -1083,6 +1128,14 @@
     </script>
     @endif
     @stack('scripts')
+
+    {{-- Toast Notification --}}
+    <div class="app-toast {{ session('toast') ? 'show' : '' }}" id="appToast" role="status">
+        {{ session('toast') }}
+    </div>
+    @if(session('toast'))
+    <script>setTimeout(function(){var t=document.getElementById('appToast');if(t)t.classList.remove('show')},3000)</script>
+    @endif
 
     {{-- PWA Service Worker --}}
     <script>

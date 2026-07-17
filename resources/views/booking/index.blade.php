@@ -1,4 +1,4 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'booking'])
 @section('title', 'TruSaba · Booking Saya')
 @section('content')
 

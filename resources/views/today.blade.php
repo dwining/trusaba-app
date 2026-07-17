@@ -3,7 +3,6 @@
 @section('content')
 
 <div class="app-header">
-    <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
     <div class="title-block">
         <p class="eyebrow">On-trip · Day {{ $dayNumber ?? '-' }}</p>
         <h1>Hari Ini</h1>

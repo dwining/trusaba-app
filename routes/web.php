@@ -21,6 +21,7 @@ Route::get('/', function () {
 // Redirect /login to /auth
 Route::redirect('/login', '/auth');
 Route::redirect('/register', '/auth');
+Route::redirect('/profile', '/profile/edit');
 
 // Auth routes (guest only)
 Route::middleware('guest')->group(function () {

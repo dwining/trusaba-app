@@ -18,7 +18,6 @@
 @section('content')
 
 <div class="app-header">
-    <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
     <div class="title-block">
         <p class="eyebrow">Dashboard</p>
         <h1>Halo, {{ explode(' ', Auth::user()->name)[0] }}</h1>

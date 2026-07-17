@@ -1,10 +1,9 @@
-@extends('layouts.app', ['navActive' => 'home'])
+@extends('layouts.app', ['navActive' => ''])
 
 @section('title', 'TruSaba · Profil Trip')
 
 @section('content')
 <div class="app-header">
-    <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
     <div class="title-block">
         <p class="eyebrow">Langkah <span id="stepLabel">1</span>/4</p>
         <h1>Ceritakan trip-mu</h1>
@@ -23,18 +22,31 @@
 
 @php $profile = Auth::user()->travellerProfile; @endphp
 
-<div class="app-body has-sticky" id="formBody" style="padding-bottom:100px">
-    {{-- Step 0: Destinasi + DOB --}}
+<div class="app-body has-sticky" id="formBody" style="padding-bottom:calc(var(--nav-h) + var(--safe-b) + 90px)">
+    {{-- Step 0: Destinasi --}}
     <section class="pad step-panel" data-panel="0">
         <p class="muted small" style="margin-bottom:16px">AI TruSaba butuh sedikit info agar itinerary terasa personal.</p>
+        
+        {{-- Profile completion CTA --}}
+        @if(!$profile || !$profile->birth_date)
+        <div class="card" style="background:linear-gradient(145deg,oklch(0.58 0.22 27 / 0.08),oklch(0.85 0.17 87 / 0.1));border-color:oklch(0.58 0.22 27 / 0.2);margin-bottom:16px">
+            <div class="row" style="gap:10px">
+                <div style="flex:1;min-width:0">
+                    <h3 style="font-size:14px">Lengkapi tanggal lahirmu dulu</h3>
+                    <p class="small muted">Tanggal lahir membantu AI menyusun itinerary sesuai usiamu.</p>
+                </div>
+                <a href="{{ route('profile.edit') }}" class="btn btn-danger btn-sm" style="flex-shrink:0">Isi Profile</a>
+            </div>
+        </div>
+        @endif
+
         <div class="field">
             <label class="field-label" for="dest">Destinasi <span class="req">*</span></label>
             <input class="input" id="dest" type="text" value="Bali" placeholder="Kota / destinasi" required />
         </div>
-        <div class="field">
-            <label class="field-label" for="dob">Tanggal lahir <span class="req">*</span></label>
-            <input class="input" id="dob" type="date" value="{{ old('birth_date', Auth::user()->travellerProfile?->birth_date?->format('Y-m-d') ?? '1998-06-15') }}" required />
-        </div>
+
+        {{-- Hidden: birth_date from profile --}}
+        <input type="hidden" id="dob" value="{{ $profile?->birth_date?->format('Y-m-d') ?? '' }}" />
     </section>
 
     {{-- Step 1: Hobby --}}
@@ -78,11 +90,11 @@
             <div class="row-between">
                 <label class="field-label" style="margin:0">Budget trip</label>
                 <span class="mono" style="font-weight:600;color:var(--accent-hex)" id="budgetVal">
-                    Rp {{ number_format($profile?->default_budget ?? 5000000, 0, ',', '.') }}
+                    Rp {{ number_format(5000000, 0, ',', '.') }}
                 </span>
             </div>
             <div class="range-wrap">
-                <input type="range" id="budget" min="1000000" max="20000000" step="500000" value="{{ $profile?->default_budget ?? 5000000 }}" />
+                <input type="range" id="budget" min="1000000" max="20000000" step="500000" value="5000000" />
             </div>
             <div class="row-between caption">
                 <span>Rp 1jt</span><span>Rp 20jt</span>
@@ -106,7 +118,7 @@
 </div>
 
 {{-- Sticky CTA --}}
-<div class="sticky-cta" style="bottom:var(--safe-b);z-index:21">
+<div class="sticky-cta" style="bottom:calc(var(--nav-h) + var(--safe-b));z-index:21">
     <div class="row" style="gap:10px">
         <button type="button" class="btn btn-secondary" id="btnBack" style="display:none;flex:0 0 auto;padding:0 16px">Kembali</button>
         <button type="button" class="btn btn-primary btn-block" id="btnNext">Lanjut</button>
@@ -200,9 +212,8 @@
         btnNext.addEventListener('click', function () {
             if (step === 0) {
                 var dest = document.getElementById('dest').value.trim();
-                var dob = document.getElementById('dob').value;
-                if (!dest || !dob) {
-                    alert('Destinasi dan tanggal lahir wajib diisi.');
+                if (!dest) {
+                    alert('Destinasi wajib diisi.');
                     return;
                 }
             }
@@ -210,18 +221,12 @@
                 step++;
                 render();
             } else {
-                // Submit profile data then redirect
+                // Submit directly to itinerary generation
                 var payload = collectData();
                 var form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '{{ route('profile.update') }}';
+                form.action = '{{ route('itineraries.generate') }}';
                 form.style.display = 'none';
-
-                var methodInput = document.createElement('input');
-                methodInput.type = 'hidden';
-                methodInput.name = '_method';
-                methodInput.value = 'PUT';
-                form.appendChild(methodInput);
 
                 var tokenInput = document.createElement('input');
                 tokenInput.type = 'hidden';
@@ -229,13 +234,46 @@
                 tokenInput.value = '{{ csrf_token() }}';
                 form.appendChild(tokenInput);
 
-                Object.keys(payload).forEach(function (key) {
-                    var input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = Array.isArray(payload[key]) ? JSON.stringify(payload[key]) : payload[key];
-                    form.appendChild(input);
+                // Map onboarding fields to itinerary generate fields
+                var fieldMap = {
+                    destination: payload.destination,
+                    start_date: payload.date_start,
+                    end_date: payload.date_end,
+                    budget: payload.budget,
+                    birth_date: payload.birth_date,
+                };
+
+                Object.keys(fieldMap).forEach(function (key) {
+                    if (fieldMap[key]) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = fieldMap[key];
+                        form.appendChild(input);
+                    }
                 });
+
+                // Hobbies as array
+                if (payload.hobbies && payload.hobbies.length) {
+                    payload.hobbies.forEach(function (h) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'hobbies[]';
+                        input.value = h;
+                        form.appendChild(input);
+                    });
+                }
+
+                // Interests as array
+                if (payload.interests && payload.interests.length) {
+                    payload.interests.forEach(function (i) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'interests[]';
+                        input.value = i;
+                        form.appendChild(input);
+                    });
+                }
 
                 document.body.appendChild(form);
                 form.submit();

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 @section('title', 'TruSaba · AI Menyusun Itinerary')
 @section('content')
 <div class="app-body no-nav" style="display:flex;flex-direction:column">
@@ -6,7 +6,7 @@
         <div class="plane-orbit">
             <div class="ring"></div>
             <div class="core">
-                <img src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
+                <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:var(--accent-hex);fill:none;stroke-width:2"><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
             </div>
         </div>
         <p class="eyebrow" style="color:var(--accent-hex);margin-bottom:8px">AI TruSaba</p>

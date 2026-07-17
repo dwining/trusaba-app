@@ -1,4 +1,4 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 
 @section('title', 'TruSaba · Login & Sign Up')
 
@@ -12,7 +12,6 @@
 <div class="app-body no-nav">
     {{-- Hero --}}
     <div class="auth-hero">
-        <img class="logo-lg" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
         <h1>Selamat datang</h1>
         <p id="authSubtitle">Masuk untuk menyimpan itinerary AI & booking trip-mu.</p>
     </div>

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 @section('title', 'TruSaba · Edit Profil')
 @section('content')
 
@@ -68,21 +68,7 @@
                 @endforeach
             </div>
 
-            <div class="field">
-                <label class="field-label">Budget default (opsional)</label>
-                <div class="range-wrap">
-                    <input type="range" id="budget" name="default_budget" min="1000000" max="20000000" step="500000" value="{{ old('default_budget', $user->travellerProfile?->default_budget ?? 5000000) }}" />
-                </div>
-                <div class="row-between caption">
-                    <span>Rp 1jt</span><span>Rp 20jt</span>
-                </div>
-                <p class="mono small" style="font-weight:600;color:var(--accent-hex);margin-top:4px" id="budgetVal">
-                    Rp {{ number_format(old('default_budget', $user->travellerProfile?->default_budget ?? 5000000), 0, ',', '.') }}
-                </p>
-            </div>
-        </div>
-
-        <div style="padding:20px">
+        <div style="padding:20px 20px calc(var(--nav-h) + var(--safe-b) + 20px)">
             <button type="submit" class="btn btn-primary btn-block">Simpan Profil</button>
         </div>
     </form>
@@ -109,12 +95,6 @@ function syncChips(containerId, inputClass) {
 }
 syncChips('hobbyChips', 'hobby-input');
 syncChips('interestChips', 'interest-input');
-
-// Budget display
-document.getElementById('budget').addEventListener('input', function(e) {
-    var n = parseInt(e.target.value);
-    document.getElementById('budgetVal').textContent = 'Rp ' + n.toLocaleString('id-ID');
-});
 </script>
 @endpush
 @endsection

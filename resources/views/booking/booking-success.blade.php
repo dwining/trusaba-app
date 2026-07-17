@@ -1,4 +1,4 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 @section('title', 'TruSaba · Voucher Booking')
 @section('content')
 
@@ -11,7 +11,6 @@
         <p class="muted small" style="margin:6px 0 20px">Voucher digital sudah siap. Tunjukkan saat check-in.</p>
 
         <div class="voucher" data-od-id="digital-voucher">
-            <img src="{{ asset('logo.jpeg') }}" alt="TruSaba" style="width:48px;height:48px;object-fit:contain;margin-bottom:8px" />
             <p class="eyebrow" style="color:var(--accent-hex)">{{ $booking->booking_type === 'hotel' ? 'Hotel Voucher' : 'Booking Voucher' }}</p>
             <h2 style="margin:6px 0 2px">{{ $booking->merchant->name }}</h2>
             <p class="small muted">{{ $booking->resource_detail['room_type'] ?? $booking->booking_type }}</p>

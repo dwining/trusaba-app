@@ -38,6 +38,10 @@ class ItineraryController extends Controller
             'end_date' => ['required', 'date', 'after:start_date'],
             'participants' => ['nullable', 'integer', 'min:1', 'max:50'],
             'budget' => ['nullable', 'integer', 'min:0'],
+            // Profile data from onboarding
+            'birth_date' => ['nullable', 'date', 'before:today'],
+            'hobbies' => ['nullable', 'array'],
+            'interests' => ['nullable', 'array'],
         ], [
             'destination.required' => 'Destinasi wajib diisi.',
             'start_date.required' => 'Tanggal mulai wajib diisi.',
@@ -45,17 +49,38 @@ class ItineraryController extends Controller
             'end_date.after' => 'Tanggal selesai harus setelah tanggal mulai.',
         ]);
 
+        $user = Auth::user();
+
+        // Save profile data if provided
+        $profileData = [];
+        if (isset($validated['birth_date'])) {
+            $profileData['birth_date'] = $validated['birth_date'];
+        }
+        if (isset($validated['hobbies'])) {
+            $profileData['hobbies'] = $validated['hobbies'];
+        }
+        if (isset($validated['interests'])) {
+            $profileData['interests'] = $validated['interests'];
+        }
+        if (!empty($profileData)) {
+            $user->travellerProfile()->updateOrCreate(
+                ['user_id' => $user->id],
+                $profileData
+            );
+        }
+
         $startDate = Carbon::parse($validated['start_date']);
         $endDate = Carbon::parse($validated['end_date']);
         $durationDays = (int) $startDate->diffInDays($endDate) + 1;
 
-        $itinerary = Auth::user()->itineraries()->create([
+        $itinerary = $user->itineraries()->create([
+            'title' => 'Trip ke ' . $validated['destination'],
             'destination' => $validated['destination'],
             'start_date' => $startDate,
             'end_date' => $endDate,
             'duration_days' => $durationDays,
             'total_participants' => $validated['participants'] ?? 1,
-            'budget_input' => $validated['budget'] ?? Auth::user()->travellerProfile?->default_budget,
+            'budget_input' => $validated['budget'] ?? null,
             'status' => 'processing',
         ]);
 

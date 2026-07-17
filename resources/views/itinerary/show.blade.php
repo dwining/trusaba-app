@@ -1,6 +1,23 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 @section('title', 'TruSaba · Itinerary ' . $itinerary->destination)
 @section('content')
+
+@if($itinerary->status === 'processing')
+<script>window.location.href = '{{ route('itineraries.loading', $itinerary->id) }}';</script>
+@endif
+
+@if($itinerary->status === 'failed')
+<div class="app-body" style="display:flex;align-items:center;justify-content:center">
+    <div style="text-align:center;padding:40px 20px">
+        <div class="modal-icon" style="margin:0 auto 12px">
+            <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.8 18a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>
+        </div>
+        <h2>Gagal membuat itinerary</h2>
+        <p class="muted">AI tidak bisa menyusun itinerary kali ini. Coba lagi ya.</p>
+        <a href="{{ route('onboarding') }}" class="btn btn-primary" style="margin-top:12px">Coba Lagi</a>
+    </div>
+</div>
+@else
 
 <div class="app-header">
     <a class="icon-btn" href="{{ route('itineraries.index') }}" aria-label="Kembali">
@@ -159,5 +176,6 @@
         Profil
     </a>
 </nav>
+@endif
 
 @endsection

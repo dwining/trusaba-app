@@ -3,7 +3,6 @@
 @section('content')
 
 <div class="app-header">
-    <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
     <div class="title-block">
         <p class="eyebrow">Profil</p>
         <h1>Riwayat</h1>
@@ -118,12 +117,7 @@
                 <span class="muted small">Minat</span>
                 <span class="small" style="font-weight:600">{{ ! empty($profile?->interests) ? implode(', ', $profile->interests) : 'Belum diisi' }}</span>
             </div>
-            @if($profile?->default_budget)
-            <div class="row-between">
-                <span class="muted small">Budget default</span>
-                <span class="mono small" style="font-weight:600;color:var(--accent-hex)">Rp {{ number_format($profile->default_budget, 0, ',', '.') }}</span>
-            </div>
-            @endif
+
         </div>
         <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-block">Edit Profil</a>
     </div>

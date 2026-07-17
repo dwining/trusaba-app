@@ -1,9 +1,8 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 @section('title', 'TruSaba · Itinerary Saya')
 @section('content')
 
 <div class="app-header">
-    <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
     <div class="title-block">
         <p class="eyebrow">Itinerary</p>
         <h1>Perjalanan Saya</h1>
