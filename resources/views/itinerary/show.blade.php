@@ -136,8 +136,11 @@
                         </div>
                     </div>
                     @if($item->is_bookable)
-                    <a class="btn btn-primary btn-sm btn-block" style="margin-top:12px" href="{{ route('bookings.index') }}">
-                        Booking Sekarang
+                    <a class="btn btn-primary btn-sm btn-block" style="margin-top:12px"
+                       href="{{ $item->merchant_id
+                           ? route('bookings.create', ['merchant_id' => $item->merchant_id, 'item_id' => $item->id, 'type' => $item->type])
+                           : route('bookings.index') }}">
+                        {{ $item->merchant_id ? 'Booking Sekarang' : 'Cari Booking' }}
                     </a>
                     @endif
                 </div>

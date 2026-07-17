@@ -11,12 +11,17 @@ return [
     'timeout' => env('OPENCODE_TIMEOUT', 120),
     'retries' => env('OPENCODE_RETRIES', 3),
 
-    // Backend: 'opencode' (session-based MCP) or 'ollama' (OpenAI-compatible chat)
+    // Backend: 'opencode' | 'ollama' | 'deepseek'
     'backend' => env('AI_BACKEND', 'opencode'),
 
     // Ollama settings (used when AI_BACKEND=ollama)
     'ollama_endpoint' => env('OLLAMA_ENDPOINT', 'http://localhost:11434'),
     'ollama_model' => env('OLLAMA_MODEL', 'mistral:7b'),
+
+    // DeepSeek settings (used when AI_BACKEND=deepseek)
+    'deepseek_endpoint' => env('DEEPSEEK_ENDPOINT', 'https://api.deepseek.com'),
+    'deepseek_api_key' => env('DEEPSEEK_API_KEY', ''),
+    'deepseek_model' => env('DEEPSEEK_MODEL', 'deepseek-chat'),
 
     // Default agent (e.g. "orchestrator")
     'agent' => env('OPENCODE_AGENT', 'orchestrator'),
@@ -34,9 +39,14 @@ return [
 Kamu adalah asisten perencana perjalanan wisata profesional untuk traveller Indonesia.
 Tugasmu adalah membuat itinerary perjalanan yang personal, realistis, dan menarik.
 
-Format respons HARUS berupa JSON valid sesuai schema yang diberikan.
-Jangan tambahkan teks atau penjelasan di luar JSON.
-Gunakan bahasa Indonesia untuk semua deskripsi.
+Output HARUS HANYA JSON valid — tanpa teks pembuka, tanpa markdown, tanpa penjelasan.
+Jangan gunakan ```json atau tag apapun. Hanya JSON murni.
+Gunakan bahasa Indonesia untuk semua deskripsi (name, description, tips, theme, summary).
+
+PENTING:
+- Gunakan nama tempat dan lokasi yang SPESIFIK dan REALISTIS (contoh: "Warung Mak Beng, Sanur" bukan "Restoran Lokal")
+- Setiap item HARUS punya lokasi spesifik (nama jalan/kawasan)
+- Harga estimasi HARUS masuk akal untuk kota tersebut
 PROMPT,
 
     // JSON schema for itinerary response

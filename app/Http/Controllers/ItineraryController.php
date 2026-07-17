@@ -62,7 +62,7 @@ class ItineraryController extends Controller
         if (isset($validated['interests'])) {
             $profileData['interests'] = $validated['interests'];
         }
-        if (!empty($profileData)) {
+        if (! empty($profileData)) {
             $user->travellerProfile()->updateOrCreate(
                 ['user_id' => $user->id],
                 $profileData
@@ -74,7 +74,7 @@ class ItineraryController extends Controller
         $durationDays = (int) $startDate->diffInDays($endDate) + 1;
 
         $itinerary = $user->itineraries()->create([
-            'title' => 'Trip ke ' . $validated['destination'],
+            'title' => 'Trip ke '.$validated['destination'],
             'destination' => $validated['destination'],
             'start_date' => $startDate,
             'end_date' => $endDate,

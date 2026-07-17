@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MerchantAvailability extends Model
 {
+    /** @var string */
+    protected $table = 'merchant_availability';
+
     protected $fillable = [
         'merchant_id',
         'resource_type',

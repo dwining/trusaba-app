@@ -36,7 +36,7 @@ class BookingController extends Controller
         $itemId = $request->query('item_id');
         $type = $request->query('type', 'hotel');
 
-        $merchant = $merchantId ? Merchant::findOrFail($merchantId) : null;
+        $merchant = $merchantId ? Merchant::with('merchantRooms')->findOrFail($merchantId) : null;
 
         return view('booking.hotel-detail', compact('merchant', 'itemId', 'type'));
     }

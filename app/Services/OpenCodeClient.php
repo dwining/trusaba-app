@@ -52,6 +52,14 @@ class OpenCodeClient
         return config('opencode.backend') === 'ollama';
     }
 
+    /**
+     * Whether we're using DeepSeek as the AI backend.
+     */
+    public function isDeepSeekBackend(): bool
+    {
+        return config('opencode.backend') === 'deepseek';
+    }
+
     // ─── Session API ────────────────────────────────────────────────────
 
     /**
@@ -264,6 +272,10 @@ class OpenCodeClient
             return $this->generateItineraryViaOllama($systemPrompt, $userPrompt);
         }
 
+        if ($this->isDeepSeekBackend()) {
+            return $this->generateItineraryViaDeepSeek($systemPrompt, $userPrompt);
+        }
+
         return $this->dispatchPromptSyncWithSystem($systemPrompt, $userPrompt, $agent, $model);
     }
 
@@ -274,6 +286,10 @@ class OpenCodeClient
     {
         if ($this->isOllamaBackend()) {
             return $this->chatViaOllama($message, $context);
+        }
+
+        if ($this->isDeepSeekBackend()) {
+            return $this->chatViaDeepSeek($message, $context);
         }
 
         if (! empty($context)) {
@@ -330,6 +346,58 @@ class OpenCodeClient
         return $response->json()['message']['content'] ?? 'Maaf, ada gangguan. Coba lagi ya.';
     }
 
+    // ─── DeepSeek Backend ───────────────────────────────────────────────
+
+    protected function generateItineraryViaDeepSeek(string $systemPrompt, string $userPrompt): string
+    {
+        $endpoint = rtrim(config('opencode.deepseek_endpoint'), '/');
+        $model = config('opencode.deepseek_model', 'deepseek-chat');
+        $apiKey = config('opencode.deepseek_api_key');
+
+        $response = Http::timeout($this->timeout)
+            ->withToken($apiKey)
+            ->withHeader('Content-Type', 'application/json')
+            ->post("{$endpoint}/v1/chat/completions", [
+                'model' => $model,
+                'messages' => [
+                    ['role' => 'system', 'content' => $systemPrompt],
+                    ['role' => 'user', 'content' => $userPrompt],
+                ],
+                'temperature' => 0.7,
+                'max_tokens' => 4096,
+            ]);
+
+        return $response->json()['choices'][0]['message']['content'] ?? '';
+    }
+
+    protected function chatViaDeepSeek(string $message, array $context = []): string
+    {
+        $endpoint = rtrim(config('opencode.deepseek_endpoint'), '/');
+        $model = config('opencode.deepseek_model', 'deepseek-chat');
+        $apiKey = config('opencode.deepseek_api_key');
+
+        $systemPrompt = "Kamu adalah customer service TruSaba yang ramah dan helpful.\nKamu membantu traveller dalam hal pertanyaan itinerary, informasi destinasi, booking, pembayaran, tips traveling.\nJawab dalam bahasa Indonesia dengan ramah dan singkat.";
+
+        if (! empty($context)) {
+            $systemPrompt .= "\n\nKonteks traveller:\n".json_encode($context, JSON_UNESCAPED_UNICODE);
+        }
+
+        $response = Http::timeout($this->timeout)
+            ->withToken($apiKey)
+            ->withHeader('Content-Type', 'application/json')
+            ->post("{$endpoint}/v1/chat/completions", [
+                'model' => $model,
+                'messages' => [
+                    ['role' => 'system', 'content' => $systemPrompt],
+                    ['role' => 'user', 'content' => $message],
+                ],
+                'temperature' => 0.8,
+                'max_tokens' => 1024,
+            ]);
+
+        return $response->json()['choices'][0]['message']['content'] ?? 'Maaf, ada gangguan. Coba lagi ya.';
+    }
+
     /**
      * Ping the OpenCode server to check connectivity.
      */
@@ -351,6 +419,19 @@ class OpenCodeClient
      */
     public function extractJsonFromText(string $text): array
     {
+        // Strip markdown code fences if present
+        $text = trim($text);
+        $text = preg_replace('/^```(?:json)?\s*\n?/i', '', $text);
+        $text = preg_replace('/\n?```\s*$/i', '', $text);
+        $text = trim($text);
+
+        // Try direct JSON parse first (expected pure JSON)
+        $decoded = json_decode($text, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded;
+        }
+
+        // Fallback: try to extract JSON from mixed text
         if (preg_match('/\{[\s\S]*\}/', $text, $matches)) {
             $decoded = json_decode($matches[0], true);
             if (json_last_error() === JSON_ERROR_NONE) {

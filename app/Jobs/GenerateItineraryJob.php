@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Itinerary;
 use App\Models\ItineraryItem;
+use App\Models\Merchant;
 use App\Services\OpenCodeClient;
 use Carbon\Carbon;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -66,15 +67,45 @@ Kembalikan dalam format JSON berikut:
 {$jsonSchema}
 PROMPT;
 
+        // ─── Log: Prompt Data ───────────────────────────────────────
+        Log::info('GenerateItineraryJob: sending prompt to AI', [
+            'itinerary_id' => $itinerary->id,
+            'destination' => $itinerary->destination,
+            'duration_days' => $itinerary->duration_days,
+            'budget' => $itinerary->budget_input,
+            'age' => $age,
+            'hobbies' => $hobbyStr,
+            'interests' => $interestStr,
+            'prompt_length' => strlen($userPrompt),
+            'system_prompt' => $systemPrompt,
+            'user_prompt' => $userPrompt,
+            'backend' => config('opencode.backend'),
+        ]);
+
         // Call OpenCode via the real session-based API (sync flow)
+        $startTime = microtime(true);
         $rawText = $openCode->generateItinerary($systemPrompt, $userPrompt);
+        $elapsed = round(microtime(true) - $startTime, 2);
         $response = $openCode->extractJsonFromText($rawText);
+
+        // ─── Log: AI Response ───────────────────────────────────────
+        Log::info('GenerateItineraryJob: received AI response', [
+            'itinerary_id' => $itinerary->id,
+            'elapsed_seconds' => $elapsed,
+            'raw_length' => strlen($rawText),
+            'raw_preview' => substr($rawText, 0, 500),
+            'parsed_keys' => array_keys($response),
+            'days_count' => count($response['days'] ?? []),
+            'title' => $response['title'] ?? null,
+            'estimated_budget' => $response['total_estimated_budget'] ?? $response['estimated_budget'] ?? null,
+            'used_fallback' => empty($response['days'] ?? []) || isset($response['raw_response']),
+        ]);
 
         $itinerary->update([
             'ai_raw_response' => $response,
         ]);
 
-        $days = $response['days'] ?? $response['itinerary']['days'] ?? [];
+        $days = $response['days'] ?? [];
 
         // Fallback: if OpenCode returned HTML (web UI) instead of structured JSON,
         // generate a mock itinerary for MVP demo purposes
@@ -105,7 +136,7 @@ PROMPT;
                     'schedule_time' => $item['time'] ?? '09:00',
                     'type' => $item['type'] ?? 'other',
                     'name' => $item['name'] ?? '',
-                    'description' => $item['description'] ?? null,
+                    'description' => $item['description'] ?? $item['tips'] ?? null,
                     'location' => $item['location'] ?? null,
                     'estimated_cost' => $cost,
                     'is_bookable' => (bool) ($item['is_bookable'] ?? false),
@@ -114,11 +145,28 @@ PROMPT;
             }
         }
 
-        $title = $response['title'] ?? $response['itinerary']['title'] ?? "Trip ke {$itinerary->destination}";
+        // --- Merchant Matching ------------------------------------
+        // Match bookable items to real merchants in the database
+        $this->matchMerchants($itinerary);
+        // ----------------------------------------------------------
+
+        $title = $response['title'] ?? "Trip ke {$itinerary->destination}";
         $itinerary->update([
             'title' => $title,
             'estimated_budget' => $totalBudget,
             'status' => 'draft',
+        ]);
+
+        // ─── Log: Final Summary ────────────────────────────────────
+        $matchedCount = $itinerary->itineraryItems()->whereNotNull('merchant_id')->count();
+        Log::info('GenerateItineraryJob: completed', [
+            'itinerary_id' => $itinerary->id,
+            'title' => $title,
+            'total_items' => $itinerary->itineraryItems()->count(),
+            'total_estimated_budget' => $totalBudget,
+            'user_budget' => $itinerary->budget_input,
+            'matched_to_merchant' => $matchedCount,
+            'over_budget' => $totalBudget > $itinerary->budget_input,
         ]);
     }
 
@@ -206,6 +254,100 @@ PROMPT;
         }
 
         return $days;
+    }
+
+    /**
+     * Match itinerary items to merchants in the database.
+     */
+    protected function matchMerchants(Itinerary $itinerary): void
+    {
+        $items = $itinerary->itineraryItems()
+            ->where('is_bookable', true)
+            ->whereNull('merchant_id')
+            ->get();
+
+        if ($items->isEmpty()) {
+            Log::info('Merchant matching: no bookable items to match', [
+                'itinerary_id' => $itinerary->id,
+            ]);
+
+            return;
+        }
+
+        $matched = 0;
+        foreach ($items as $item) {
+            $merchant = $this->findMatchingMerchant($itinerary, $item);
+            if ($merchant) {
+                $item->update(['merchant_id' => $merchant->id]);
+                $matched++;
+            }
+        }
+
+        Log::info('Merchant matching completed', [
+            'itinerary_id' => $itinerary->id,
+            'total_bookable' => $items->count(),
+            'matched' => $matched,
+        ]);
+    }
+
+    /**
+     * Find a matching merchant for an itinerary item.
+     */
+    protected function findMatchingMerchant(Itinerary $itinerary, ItineraryItem $item): ?Merchant
+    {
+        // Map itinerary item type to merchant type
+        $merchantType = match ($item->type) {
+            'hotel' => 'hotel',
+            'restaurant' => ['restaurant', 'cafe'],
+            'attraction' => 'attraction',
+            'transport' => 'transport',
+            'shopping' => 'other',
+            default => null,
+        };
+
+        if (! $merchantType) {
+            return null;
+        }
+
+        $query = Merchant::where('is_active', true);
+
+        if (is_array($merchantType)) {
+            $query->whereIn('type', $merchantType);
+        } else {
+            $query->where('type', $merchantType);
+        }
+
+        // Try to match by city/province from the item location or itinerary destination
+        $location = $item->location ?? $itinerary->destination;
+        $locationParts = explode(',', $location);
+        $cityHint = trim($locationParts[0] ?? '');
+
+        if ($cityHint) {
+            $query->where(function ($q) use ($cityHint) {
+                $q->where('city', 'LIKE', "%{$cityHint}%")
+                    ->orWhere('province', 'LIKE', "%{$cityHint}%")
+                    ->orWhere('address', 'LIKE', "%{$cityHint}%")
+                    ->orWhere('description', 'LIKE', "%{$cityHint}%");
+            });
+        }
+
+        // For hotels: try to match by name similarity
+        if ($item->type === 'hotel' && $item->name) {
+            $quickHotelQuery = clone $query;
+            $query->orWhere('name', 'LIKE', '%'.$item->name.'%');
+        }
+
+        $merchant = $query->first();
+
+        // If still no match, get any active merchant of the right type
+        if (! $merchant) {
+            $merchant = Merchant::where('is_active', true)
+                ->when(is_array($merchantType), fn ($q) => $q->whereIn('type', $merchantType))
+                ->when(! is_array($merchantType), fn ($q) => $q->where('type', $merchantType))
+                ->first();
+        }
+
+        return $merchant;
     }
 
     public function failed(\Throwable $exception): void

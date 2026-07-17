@@ -24,30 +24,40 @@
 
         <h2 style="margin:20px 0 10px" data-od-id="room-title">Pilih jenis kamar</h2>
         <div class="stack" id="roomOptions" data-od-id="room-options">
-            <label class="room-opt selected" onclick="selectRoom(this, 1100000)" data-od-id="room-superior">
-                <input type="radio" name="room" value="superior" checked />
-                <div style="flex:1">
-                    <h3>Superior Twin</h3>
-                    <p class="small muted">2 twin bed · 24 m² · balcony</p>
-                    <p class="mono small" style="font-weight:600;margin-top:4px;color:var(--accent-hex)">Rp 1.100.000</p>
-                </div>
-            </label>
-            <label class="room-opt" onclick="selectRoom(this, 1450000)" data-od-id="room-deluxe">
-                <input type="radio" name="room" value="deluxe" />
-                <div style="flex:1">
-                    <h3>Deluxe King</h3>
-                    <p class="small muted">1 king bed · 32 m² · pool view</p>
-                    <p class="mono small" style="font-weight:600;margin-top:4px;color:var(--accent-hex)">Rp 1.450.000</p>
-                </div>
-            </label>
-            <label class="room-opt" onclick="selectRoom(this, 1900000)" data-od-id="room-suite">
-                <input type="radio" name="room" value="suite" />
-                <div style="flex:1">
-                    <h3>Garden Suite</h3>
-                    <p class="small muted">1 king · 45 m² · private garden</p>
-                    <p class="mono small" style="font-weight:600;margin-top:4px;color:var(--accent-hex)">Rp 1.900.000</p>
-                </div>
-            </label>
+            @if($merchant)
+                @forelse($merchant->merchantRooms as $room)
+                <label class="room-opt {{ $loop->first ? 'selected' : '' }}" onclick="selectRoom(this, {{ $room->price_per_night }})">
+                    <input type="radio" name="room" value="{{ $room->id }}" {{ $loop->first ? 'checked' : '' }} />
+                    <div style="flex:1">
+                        <h3>{{ $room->room_type }}</h3>
+                        @if($room->description)
+                        <p class="small muted">{{ $room->description }}</p>
+                        @endif
+                        <p class="mono small" style="font-weight:600;margin-top:4px;color:var(--accent-hex)">Rp {{ number_format($room->price_per_night, 0, ',', '.') }}</p>
+                    </div>
+                </label>
+                @empty
+                <p class="muted small">Belum ada data kamar.</p>
+                @endforelse
+            @else
+                {{-- Fallback static rooms --}}
+                <label class="room-opt selected" onclick="selectRoom(this, 1100000)" data-od-id="room-superior">
+                    <input type="radio" name="room" value="superior" checked />
+                    <div style="flex:1">
+                        <h3>Superior Twin</h3>
+                        <p class="small muted">2 twin bed · 24 m² · balcony</p>
+                        <p class="mono small" style="font-weight:600;margin-top:4px;color:var(--accent-hex)">Rp 1.100.000</p>
+                    </div>
+                </label>
+                <label class="room-opt" onclick="selectRoom(this, 1450000)" data-od-id="room-deluxe">
+                    <input type="radio" name="room" value="deluxe" />
+                    <div style="flex:1">
+                        <h3>Deluxe King</h3>
+                        <p class="small muted">1 king bed · 32 m² · pool view</p>
+                        <p class="mono small" style="font-weight:600;margin-top:4px;color:var(--accent-hex)">Rp 1.450.000</p>
+                    </div>
+                </label>
+            @endif
         </div>
 
         <h2 style="margin:20px 0 10px">Tanggal menginap</h2>
