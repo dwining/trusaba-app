@@ -73,6 +73,8 @@ Route::middleware(['auth'])->group(function () {
     // Chat
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
     Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+    Route::get('/chat/idle', [ChatController::class, 'checkIdle'])->name('chat.idle');
+    Route::post('/chat/end', [ChatController::class, 'endSession'])->name('chat.end');
 
     // SOS
     Route::post('/sos', [SosController::class, 'send'])->name('sos.send');

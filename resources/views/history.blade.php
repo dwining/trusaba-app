@@ -18,6 +18,25 @@
     <button type="button" class="tab {{ $tab === 'tx' ? 'active' : '' }}" onclick="showTab('tx')">Riwayat Transaksi</button>
 </div>
 
+{{-- Profile completion banner --}}
+@php $profile = Auth::user()->travellerProfile; @endphp
+@if(!$profile || !$profile->birth_date)
+<div class="pad" style="margin-bottom:12px">
+    <div class="card" style="background:linear-gradient(145deg,oklch(0.55 0.18 255 / 0.08),oklch(0.85 0.17 87 / 0.1));border-color:oklch(0.55 0.18 255 / 0.25)">
+        <div class="row" style="gap:12px">
+            <div class="act-icon act-hotel" style="flex-shrink:0">
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            </div>
+            <div style="flex:1;min-width:0">
+                <h3 style="font-size:14px">Lengkapi data diri kamu</h3>
+                <p class="small muted">Tanggal lahir & preferensi membantu AI TruSaba bikin itinerary yang lebih personal.</p>
+            </div>
+            <a href="{{ route('onboarding') }}" class="btn btn-primary btn-sm" style="flex-shrink:0">Isi Sekarang</a>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="app-body">
     <div class="pad stack" id="panelTrips" {{ $tab !== 'trips' ? 'hidden' : '' }}>
         @forelse($itineraries as $itin)

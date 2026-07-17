@@ -1,4 +1,4 @@
-@extends('layouts.app', ['showNav' => false])
+@extends('layouts.app', ['navActive' => 'home'])
 
 @section('title', 'TruSaba · Profil Trip')
 
@@ -31,7 +31,7 @@
         </div>
         <div class="field">
             <label class="field-label" for="dob">Tanggal lahir <span class="req">*</span></label>
-            <input class="input" id="dob" type="date" value="1998-06-15" required />
+            <input class="input" id="dob" type="date" value="{{ old('birth_date', Auth::user()->travellerProfile?->birth_date?->format('Y-m-d') ?? '1998-06-15') }}" required />
         </div>
     </section>
 
