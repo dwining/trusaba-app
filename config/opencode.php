@@ -1,10 +1,34 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | OpenCode API Configuration
+    |--------------------------------------------------------------------------
+    */
     'endpoint' => env('OPENCODE_ENDPOINT', 'http://0.0.0.0:4096'),
+    'api_key' => env('OPENCODE_API_KEY', ''),
     'timeout' => env('OPENCODE_TIMEOUT', 120),
     'retries' => env('OPENCODE_RETRIES', 3),
-    
+
+    // Backend: 'opencode' (session-based MCP) or 'ollama' (OpenAI-compatible chat)
+    'backend' => env('AI_BACKEND', 'opencode'),
+
+    // Ollama settings (used when AI_BACKEND=ollama)
+    'ollama_endpoint' => env('OLLAMA_ENDPOINT', 'http://localhost:11434'),
+    'ollama_model' => env('OLLAMA_MODEL', 'mistral:7b'),
+
+    // Default agent (e.g. "orchestrator")
+    'agent' => env('OPENCODE_AGENT', 'orchestrator'),
+
+    // Default model (providerID + modelID)
+    'model_provider' => env('OPENCODE_MODEL_PROVIDER', 'opencode-go'),
+    'model_id' => env('OPENCODE_MODEL_ID', 'deepseek-v4-flash'),
+
+    // Polling config for async dispatch (maxAttempts × delayMs = max wait time)
+    'poll_max_attempts' => env('OPENCODE_POLL_MAX_ATTEMPTS', 120),
+    'poll_delay_ms' => env('OPENCODE_POLL_DELAY_MS', 3000),
+
     // System prompt template for itinerary generation
     'itinerary_system_prompt' => <<<'PROMPT'
 Kamu adalah asisten perencana perjalanan wisata profesional untuk traveller Indonesia.

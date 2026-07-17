@@ -268,9 +268,71 @@
             margin: 0 auto 14px;
         }
         .modal-icon svg { width: 28px; height: 28px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .modal-icon.success { background: oklch(0.63 0.17 149 / 0.15); color: var(--success); }
         .modal h2 { text-align: center; margin-bottom: 6px; }
         .modal p { text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 20px; }
         .modal-actions { display: flex; flex-direction: column; gap: 10px; }
+
+        /* ── Chat ── */
+        .chat-thread {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px 16px 16px;
+            min-height: 420px;
+        }
+        .bubble {
+            max-width: 82%;
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+        .bubble-ai {
+            align-self: flex-start;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+            color: var(--fg);
+        }
+        .bubble-user {
+            align-self: flex-end;
+            background: var(--accent-hex);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .bubble .time {
+            display: block;
+            font-size: 10px;
+            margin-top: 6px;
+            opacity: 0.7;
+            letter-spacing: 0.02em;
+        }
+        .chat-input-bar {
+            position: absolute;
+            left: 0; right: 0;
+            bottom: calc(var(--nav-h) + var(--safe-b));
+            padding: 10px 12px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            z-index: 15;
+        }
+        .chat-input-bar .input { min-height: 44px; border-radius: var(--radius-full); padding: 10px 16px; }
+        .chat-send {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--accent-hex);
+            color: #fff;
+            border: none;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .chat-send svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         
         /* Sticky CTA */
         .sticky-cta {
@@ -863,6 +925,57 @@
             white-space: nowrap;
         }
 
+        /* ── Voucher ── */
+        .voucher {
+            background: linear-gradient(145deg, oklch(0.55 0.18 255 / 0.08), oklch(0.85 0.17 87 / 0.12));
+            border: 1.5px dashed oklch(0.55 0.18 255 / 0.35);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        .qr-box {
+            width: 120px; height: 120px;
+            margin: 14px auto;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+        .qr-box svg { width: 96px; height: 96px; }
+        .booking-code {
+            font-family: var(--mono);
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--accent-hex);
+        }
+
+        /* ── Upload Zone ── */
+        .upload-zone {
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 28px 16px;
+            text-align: center;
+            background: var(--surface);
+            cursor: pointer;
+            transition: border-color 0.15s, background 0.15s;
+        }
+        .upload-zone:hover, .upload-zone.drag {
+            border-color: var(--accent-hex);
+            background: oklch(0.55 0.18 255 / 0.05);
+        }
+        .upload-zone svg {
+            width: 32px; height: 32px;
+            stroke: var(--accent-hex);
+            fill: none;
+            stroke-width: 1.6;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            margin-bottom: 8px;
+        }
+
         @media (max-width: 480px) {
             .stage { padding: 0; background: var(--bg); }
             .phone {
@@ -888,7 +1001,7 @@
 
             {{-- SOS FAB (shown on trip pages) --}}
             @if(($showSos ?? false))
-            <button type="button" class="fab-sos" id="fabSos" aria-label="Tombol SOS" onclick="document.getElementById('sosModal').classList.add('open')">
+            <button type="button" class="fab-sos" id="fabSos" aria-label="Tombol SOS">
                 <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.8 18a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>
                 SOS
             </button>
@@ -896,14 +1009,27 @@
             {{-- SOS Modal --}}
             <div class="modal-backdrop" id="sosModal" onclick="if(event.target===this)this.classList.remove('open')">
                 <div class="modal" role="dialog">
-                    <div class="modal-icon">
-                        <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.8 18a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>
+                    <div id="sosConfirm">
+                        <div class="modal-icon">
+                            <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.8 18a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>
+                        </div>
+                        <h2>Kirim sinyal darurat?</h2>
+                        <p>Lokasi GPS-mu akan dikirim ke kontak darurat & tim TruSaba. Hanya gunakan saat benar-benar butuh bantuan.</p>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-danger btn-block" id="btnSendSos">Kirim Sinyal Darurat</button>
+                            <button type="button" class="btn btn-secondary btn-block" id="btnCancelSos">Batal</button>
+                        </div>
                     </div>
-                    <h2>Kirim sinyal darurat?</h2>
-                    <p>Lokasi GPS-mu akan dikirim ke kontak darurat & tim TruSaba. Hanya gunakan saat benar-benar butuh bantuan.</p>
-                    <div class="modal-actions">
-                        <button type="button" class="btn btn-danger btn-block">Kirim Sinyal Darurat</button>
-                        <button type="button" class="btn btn-secondary btn-block" onclick="document.getElementById('sosModal').classList.remove('open')">Batal</button>
+                    <div id="sosSent" hidden>
+                        <div class="modal-icon success">
+                            <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
+                        </div>
+                        <h2>Lokasi Terkirim</h2>
+                        <p>Tim darurat & kontakmu sudah menerima lokasi. Tetap di tempat yang aman jika memungkinkan.</p>
+                        <div class="modal-actions">
+                            <button type="button" class="btn btn-primary btn-block" id="btnCloseSos">Tutup</button>
+                            <a class="btn btn-secondary btn-block" href="{{ route('chat') }}">Chat AI CS</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -932,6 +1058,30 @@
             @endif
         </div>
     </div>
+    {{-- SOS Modal wiring (present when showSos is true) --}}
+    @if(($showSos ?? false))
+    <script>
+    (function () {
+        var modal = document.getElementById('sosModal');
+        var confirm = document.getElementById('sosConfirm');
+        var sent = document.getElementById('sosSent');
+        document.getElementById('fabSos').addEventListener('click', function () {
+            confirm.hidden = false;
+            sent.hidden = true;
+            modal.classList.add('open');
+        });
+        document.getElementById('btnCancelSos').addEventListener('click', function () {
+            modal.classList.remove('open');
+        });
+        document.getElementById('btnCloseSos').addEventListener('click', function () {
+            modal.classList.remove('open');
+        });
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) modal.classList.remove('open');
+        });
+    })();
+    </script>
+    @endif
     @stack('scripts')
 </body>
 </html>

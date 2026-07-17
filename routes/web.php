@@ -3,8 +3,14 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ExpenseUploadController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\ItineraryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SosController;
+use App\Http\Controllers\TodayController;
 use Illuminate\Support\Facades\Route;
 
 // Splash
@@ -53,27 +59,28 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/itineraries/{id}', [ItineraryController::class, 'destroy'])->name('itineraries.destroy');
 
     // Booking
-    Route::get('/bookings', function () {
-        return view('booking.index');
-    })->name('bookings.index');
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::get('/bookings/create/payment', [BookingController::class, 'createPayment'])->name('bookings.create.payment');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/bookings/{id}/payment', [BookingController::class, 'payment'])->name('bookings.payment');
+    Route::get('/bookings/{id}/success', [BookingController::class, 'success'])->name('bookings.success');
 
     // Today
-    Route::get('/today', function () {
-        return view('today');
-    })->name('today');
+    Route::get('/today', [TodayController::class, 'index'])->name('today');
 
     // Chat
-    Route::get('/chat', function () {
-        return view('chat');
-    })->name('chat');
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+
+    // SOS
+    Route::post('/sos', [SosController::class, 'send'])->name('sos.send');
 
     // History
-    Route::get('/history', function () {
-        return view('history');
-    })->name('history');
+    Route::get('/history', [HistoryController::class, 'index'])->name('history');
 
     // Upload
-    Route::get('/expenses/upload', function () {
-        return view('expenses.upload');
-    })->name('expenses.upload');
+    Route::get('/expenses/upload', [ExpenseUploadController::class, 'index'])->name('expenses.upload');
+    Route::post('/expenses/upload', [ExpenseUploadController::class, 'store'])->name('expenses.store');
 });

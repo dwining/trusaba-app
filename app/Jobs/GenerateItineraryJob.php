@@ -66,15 +66,13 @@ Kembalikan dalam format JSON berikut:
 {$jsonSchema}
 PROMPT;
 
-        $payload = [
-            'system' => $systemPrompt,
-            'prompt' => $userPrompt,
-            'format' => 'json',
-        ];
+        // Call OpenCode via the real session-based API (sync flow)
+        $rawText = $openCode->generateItinerary($systemPrompt, $userPrompt);
+        $response = $openCode->extractJsonFromText($rawText);
 
-        $response = $openCode->generateItinerary($payload);
-
-        $itinerary->update(['ai_raw_response' => $response]);
+        $itinerary->update([
+            'ai_raw_response' => $response,
+        ]);
 
         $days = $response['days'] ?? $response['itinerary']['days'] ?? [];
 

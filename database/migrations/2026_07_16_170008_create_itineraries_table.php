@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('total_participants')->default(1);
             $table->bigInteger('budget_input')->nullable();
             $table->bigInteger('estimated_budget')->nullable();
-            $table->enum('status', ['draft', 'confirmed', 'ongoing', 'completed', 'cancelled'])->default('draft');
+            $table->enum('status', ['draft', 'processing', 'confirmed', 'ongoing', 'completed', 'cancelled', 'failed'])->default('processing');
             $table->longText('ai_raw_response')->nullable();
             $table->timestamps();
         });
