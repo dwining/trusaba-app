@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 class ChatController extends Controller
 {
     protected int $inactivityTimeout = 600; // 10 menit
+
     protected int $idlePromptDelay = 30;    // 30 detik setelah prompt idle
 
     public function index()
@@ -43,10 +44,10 @@ class ChatController extends Controller
             $interests = $profile->interests ?? [];
 
             $context['user_profile'] = [
-                'usia' => $profile->birth_date ? $profile->birth_date->age . ' tahun' : 'tidak diketahui',
+                'usia' => $profile->birth_date ? $profile->birth_date->age.' tahun' : 'tidak diketahui',
                 'hobi' => $hobbies,
                 'minat' => $interests,
-                'budget_default' => $profile->default_budget ? 'Rp ' . number_format($profile->default_budget, 0, ',', '.') : 'tidak ditentukan',
+                'budget_default' => $profile->default_budget ? 'Rp '.number_format($profile->default_budget, 0, ',', '.') : 'tidak ditentukan',
             ];
         }
 
@@ -59,10 +60,10 @@ class ChatController extends Controller
         if ($activeItinerary) {
             $context['active_trip'] = [
                 'destination' => $activeItinerary->destination,
-                'tanggal' => $activeItinerary->start_date->format('d M') . ' - ' . $activeItinerary->end_date->format('d M Y'),
-                'durasi' => $activeItinerary->duration_days . ' hari',
-                'peserta' => $activeItinerary->total_participants . ' orang',
-                'budget' => $activeItinerary->budget_input ? 'Rp ' . number_format($activeItinerary->budget_input, 0, ',', '.') : 'tidak ditentukan',
+                'tanggal' => $activeItinerary->start_date->format('d M').' - '.$activeItinerary->end_date->format('d M Y'),
+                'durasi' => $activeItinerary->duration_days.' hari',
+                'peserta' => $activeItinerary->total_participants.' orang',
+                'budget' => $activeItinerary->budget_input ? 'Rp '.number_format($activeItinerary->budget_input, 0, ',', '.') : 'tidak ditentukan',
                 'status' => $activeItinerary->status === 'ongoing' ? 'sedang berjalan' : 'direncanakan',
             ];
 
@@ -73,10 +74,10 @@ class ChatController extends Controller
                 ->orderBy('sort_order')
                 ->take(10)
                 ->get()
-                ->map(fn($i) => "Day {$i->day_number} {$i->schedule_time} — {$i->name} ({$i->type})")
+                ->map(fn ($i) => "Day {$i->day_number} {$i->schedule_time} — {$i->name} ({$i->type})")
                 ->toArray();
 
-            if (!empty($sampleItems)) {
+            if (! empty($sampleItems)) {
                 $context['jadwal_singkat'] = $sampleItems;
             }
         }
@@ -87,7 +88,7 @@ class ChatController extends Controller
         } catch (\Exception $e) {
             $replies = [
                 'Baik, aku catat. Mau tanya soal itinerary, destinasi, atau booking?',
-                'Untuk rekomendasi wisata di ' . ($activeItinerary?->destination ?? 'destinasi') . ', aku sarankan cek itinerary-mu dulu ya.',
+                'Untuk rekomendasi wisata di '.($activeItinerary?->destination ?? 'destinasi').', aku sarankan cek itinerary-mu dulu ya.',
                 'Voucher aktifmu bisa dicek di dashboard Hari Ini. Ada yang bisa dibantu?',
                 'Trip-mu masih berjalan lancar. Butuh rekomendasi resto atau tempat wisata?',
             ];
@@ -109,7 +110,7 @@ class ChatController extends Controller
      */
     protected function touchActivity(): void
     {
-        Cache::put('chat_activity_' . Auth::id(), now()->timestamp, 1800);
+        Cache::put('chat_activity_'.Auth::id(), now()->timestamp, 1800);
     }
 
     /**
@@ -117,8 +118,8 @@ class ChatController extends Controller
      */
     public function checkIdle()
     {
-        $lastActivity = Cache::get('chat_activity_' . Auth::id());
-        $isIdle = !$lastActivity || (now()->timestamp - $lastActivity) > $this->inactivityTimeout;
+        $lastActivity = Cache::get('chat_activity_'.Auth::id());
+        $isIdle = ! $lastActivity || (now()->timestamp - $lastActivity) > $this->inactivityTimeout;
 
         return response()->json([
             'idle' => $isIdle,
@@ -130,7 +131,7 @@ class ChatController extends Controller
      */
     public function endSession()
     {
-        $cacheKey = 'opencode_session_' . Auth::id();
+        $cacheKey = 'opencode_session_'.Auth::id();
         $sessionId = Cache::get($cacheKey);
 
         if ($sessionId) {
@@ -142,7 +143,7 @@ class ChatController extends Controller
             Cache::forget($cacheKey);
         }
 
-        Cache::forget('chat_activity_' . Auth::id());
+        Cache::forget('chat_activity_'.Auth::id());
 
         return response()->json(['message' => 'Sesi chat diakhiri.']);
     }

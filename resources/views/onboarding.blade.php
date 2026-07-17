@@ -21,6 +21,8 @@
     <div class="step-dot" data-step="3">4</div>
 </div>
 
+@php $profile = Auth::user()->travellerProfile; @endphp
+
 <div class="app-body has-sticky" id="formBody" style="padding-bottom:100px">
     {{-- Step 0: Destinasi + DOB --}}
     <section class="pad step-panel" data-panel="0">
@@ -40,14 +42,15 @@
         <p class="muted small" style="margin-bottom:16px">Pilih hobi yang sering kamu lakukan saat traveling.</p>
         <label class="field-label">Hobby</label>
         <div class="chips" id="hobbyChips">
-            <button type="button" class="chip active" data-v="fotografi">Fotografi</button>
-            <button type="button" class="chip" data-v="kuliner">Kuliner</button>
-            <button type="button" class="chip active" data-v="snorkeling">Snorkeling</button>
-            <button type="button" class="chip" data-v="hiking">Hiking</button>
-            <button type="button" class="chip" data-v="belanja">Belanja</button>
-            <button type="button" class="chip" data-v="yoga">Yoga</button>
-            <button type="button" class="chip" data-v="musik">Musik</button>
-            <button type="button" class="chip" data-v="surfing">Surfing</button>
+            @php $profileHobbies = $profile?->hobbies ?? ['fotografi', 'snorkeling']; @endphp
+            <button type="button" class="chip {{ in_array('fotografi', $profileHobbies) ? 'active' : '' }}" data-v="fotografi">Fotografi</button>
+            <button type="button" class="chip {{ in_array('kuliner', $profileHobbies) ? 'active' : '' }}" data-v="kuliner">Kuliner</button>
+            <button type="button" class="chip {{ in_array('snorkeling', $profileHobbies) ? 'active' : '' }}" data-v="snorkeling">Snorkeling</button>
+            <button type="button" class="chip {{ in_array('hiking', $profileHobbies) ? 'active' : '' }}" data-v="hiking">Hiking</button>
+            <button type="button" class="chip {{ in_array('belanja', $profileHobbies) ? 'active' : '' }}" data-v="belanja">Belanja</button>
+            <button type="button" class="chip {{ in_array('yoga', $profileHobbies) ? 'active' : '' }}" data-v="yoga">Yoga</button>
+            <button type="button" class="chip {{ in_array('musik', $profileHobbies) ? 'active' : '' }}" data-v="musik">Musik</button>
+            <button type="button" class="chip {{ in_array('surfing', $profileHobbies) ? 'active' : '' }}" data-v="surfing">Surfing</button>
         </div>
     </section>
 
@@ -56,14 +59,15 @@
         <p class="muted small" style="margin-bottom:16px">Minat membantu AI merekomendasikan spot yang pas.</p>
         <label class="field-label">Interest</label>
         <div class="chips" id="interestChips">
-            <button type="button" class="chip active" data-v="pantai">Pantai</button>
-            <button type="button" class="chip active" data-v="budaya">Budaya</button>
-            <button type="button" class="chip" data-v="alam">Alam</button>
-            <button type="button" class="chip" data-v="nightlife">Nightlife</button>
-            <button type="button" class="chip" data-v="wellness">Wellness</button>
-            <button type="button" class="chip active" data-v="kuliner-lokal">Kuliner lokal</button>
-            <button type="button" class="chip" data-v="adventure">Adventure</button>
-            <button type="button" class="chip" data-v="foto-spot">Foto spot</button>
+            @php $profileInterests = $profile?->interests ?? ['pantai', 'budaya', 'kuliner-lokal']; @endphp
+            <button type="button" class="chip {{ in_array('pantai', $profileInterests) ? 'active' : '' }}" data-v="pantai">Pantai</button>
+            <button type="button" class="chip {{ in_array('budaya', $profileInterests) ? 'active' : '' }}" data-v="budaya">Budaya</button>
+            <button type="button" class="chip {{ in_array('alam', $profileInterests) ? 'active' : '' }}" data-v="alam">Alam</button>
+            <button type="button" class="chip {{ in_array('nightlife', $profileInterests) ? 'active' : '' }}" data-v="nightlife">Nightlife</button>
+            <button type="button" class="chip {{ in_array('wellness', $profileInterests) ? 'active' : '' }}" data-v="wellness">Wellness</button>
+            <button type="button" class="chip {{ in_array('kuliner-lokal', $profileInterests) ? 'active' : '' }}" data-v="kuliner-lokal">Kuliner lokal</button>
+            <button type="button" class="chip {{ in_array('adventure', $profileInterests) ? 'active' : '' }}" data-v="adventure">Adventure</button>
+            <button type="button" class="chip {{ in_array('foto-spot', $profileInterests) ? 'active' : '' }}" data-v="foto-spot">Foto spot</button>
         </div>
     </section>
 
@@ -73,10 +77,12 @@
         <div class="field">
             <div class="row-between">
                 <label class="field-label" style="margin:0">Budget trip</label>
-                <span class="mono" style="font-weight:600;color:var(--accent-hex)" id="budgetVal">Rp 5.000.000</span>
+                <span class="mono" style="font-weight:600;color:var(--accent-hex)" id="budgetVal">
+                    Rp {{ number_format($profile?->default_budget ?? 5000000, 0, ',', '.') }}
+                </span>
             </div>
             <div class="range-wrap">
-                <input type="range" id="budget" min="1000000" max="20000000" step="500000" value="5000000" />
+                <input type="range" id="budget" min="1000000" max="20000000" step="500000" value="{{ $profile?->default_budget ?? 5000000 }}" />
             </div>
             <div class="row-between caption">
                 <span>Rp 1jt</span><span>Rp 20jt</span>
@@ -186,7 +192,8 @@
                 interests: interests,
                 budget: budget,
                 date_start: dateStart,
-                date_end: dateEnd
+                date_end: dateEnd,
+                redirect_to: 'onboarding'
             };
         }
 

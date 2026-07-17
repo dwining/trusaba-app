@@ -16,6 +16,7 @@
 <div class="tabs">
     <button type="button" class="tab {{ $tab === 'trips' ? 'active' : '' }}" onclick="showTab('trips')">Riwayat Traveling</button>
     <button type="button" class="tab {{ $tab === 'tx' ? 'active' : '' }}" onclick="showTab('tx')">Riwayat Transaksi</button>
+    <button type="button" class="tab {{ $tab === 'profile' ? 'active' : '' }}" onclick="showTab('profile')">Profil Saya</button>
 </div>
 
 {{-- Profile completion banner --}}
@@ -89,6 +90,54 @@
         @endforelse
         <a class="btn btn-secondary btn-block" href="{{ route('expenses.upload') }}" style="margin-top:8px">+ Upload bukti baru</a>
     </div>
+
+    <div class="pad stack" id="panelProfile" {{ $tab !== 'profile' ? 'hidden' : '' }}>
+        @php $profile = Auth::user()->travellerProfile; @endphp
+        <div class="card-soft stack-sm" style="margin-bottom:12px">
+            <div class="row-between">
+                <span class="muted small">Nama</span>
+                <span class="small" style="font-weight:600">{{ Auth::user()->name }}</span>
+            </div>
+            <div class="row-between">
+                <span class="muted small">Email</span>
+                <span class="small" style="font-weight:600">{{ Auth::user()->email }}</span>
+            </div>
+            <div class="row-between">
+                <span class="muted small">Tanggal lahir</span>
+                <span class="small" style="font-weight:600">{{ $profile?->birth_date?->format('d M Y') ?? 'Belum diisi' }}</span>
+            </div>
+            <div class="row-between">
+                <span class="muted small">Telepon</span>
+                <span class="small" style="font-weight:600">{{ $profile?->phone ?? 'Belum diisi' }}</span>
+            </div>
+            <div class="row-between">
+                <span class="muted small">Hobby</span>
+                <span class="small" style="font-weight:600">{{ ! empty($profile?->hobbies) ? implode(', ', $profile->hobbies) : 'Belum diisi' }}</span>
+            </div>
+            <div class="row-between">
+                <span class="muted small">Minat</span>
+                <span class="small" style="font-weight:600">{{ ! empty($profile?->interests) ? implode(', ', $profile->interests) : 'Belum diisi' }}</span>
+            </div>
+            @if($profile?->default_budget)
+            <div class="row-between">
+                <span class="muted small">Budget default</span>
+                <span class="mono small" style="font-weight:600;color:var(--accent-hex)">Rp {{ number_format($profile->default_budget, 0, ',', '.') }}</span>
+            </div>
+            @endif
+        </div>
+        <a href="{{ route('profile.edit') }}" class="btn btn-primary btn-block">Edit Profil</a>
+    </div>
+</div>
+
+{{-- Logout --}}
+<div class="pad" style="margin-top:8px;margin-bottom:16px">
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="btn btn-ghost btn-block" style="color:var(--danger)">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Keluar
+        </button>
+    </form>
 </div>
 
 @push('scripts')
@@ -96,8 +145,13 @@
 function showTab(id) {
     document.getElementById('panelTrips').hidden = id !== 'trips';
     document.getElementById('panelTx').hidden = id !== 'tx';
+    document.getElementById('panelProfile').hidden = id !== 'profile';
     document.querySelectorAll('.tab').forEach(function(t) {
-        t.classList.toggle('active', t.textContent.includes(id === 'trips' ? 'Traveling' : 'Transaksi'));
+        var text = t.textContent.trim();
+        var match = (id === 'trips' && text.includes('Traveling'))
+                    || (id === 'tx' && text.includes('Transaksi'))
+                    || (id === 'profile' && text.includes('Profil'));
+        t.classList.toggle('active', match);
     });
 }
 </script>

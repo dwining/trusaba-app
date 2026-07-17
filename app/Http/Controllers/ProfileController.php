@@ -7,6 +7,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    public function edit()
+    {
+        $user = Auth::user()->load('travellerProfile');
+
+        return view('profile.edit', compact('user'));
+    }
+
     public function show()
     {
         $profile = Auth::user()->travellerProfile;
@@ -17,7 +24,9 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'birth_date' => ['required', 'date', 'before:today'],
+            'name' => ['nullable', 'string', 'max:100'],
+            'email' => ['nullable', 'string', 'email', 'max:100', 'unique:users,email,'.Auth::id()],
+            'birth_date' => ['nullable', 'date', 'before:today'],
             'phone' => ['nullable', 'string', 'max:20'],
             'hobbies' => ['nullable', 'array'],
             'hobbies.*' => ['string'],
@@ -25,26 +34,39 @@ class ProfileController extends Controller
             'interests.*' => ['string'],
             'default_budget' => ['nullable', 'integer', 'min:0'],
         ], [
-            'birth_date.required' => 'Tanggal lahir wajib diisi.',
+            'email.unique' => 'Email sudah digunakan.',
             'birth_date.before' => 'Tanggal lahir tidak valid.',
         ]);
 
-        $profile = Auth::user()->travellerProfile()->updateOrCreate(
-            ['user_id' => Auth::id()],
+        $user = Auth::user();
+
+        // Update user data
+        if (isset($validated['name'])) {
+            $user->update(['name' => $validated['name']]);
+        }
+        if (isset($validated['email'])) {
+            $user->update(['email' => $validated['email']]);
+        }
+
+        // Update traveller profile
+        $user->travellerProfile()->updateOrCreate(
+            ['user_id' => $user->id],
             [
-                'birth_date' => $validated['birth_date'],
-                'phone' => $validated['phone'] ?? null,
-                'hobbies' => $validated['hobbies'] ?? [],
-                'interests' => $validated['interests'] ?? [],
-                'default_budget' => $validated['default_budget'] ?? null,
+                'birth_date' => $validated['birth_date'] ?? $user->travellerProfile?->birth_date,
+                'phone' => $validated['phone'] ?? $user->travellerProfile?->phone,
+                'hobbies' => $validated['hobbies'] ?? $user->travellerProfile?->hobbies ?? [],
+                'interests' => $validated['interests'] ?? $user->travellerProfile?->interests ?? [],
+                'default_budget' => $validated['default_budget'] ?? $user->travellerProfile?->default_budget,
             ]
         );
 
-        // If this is from the onboarding flow, redirect to itinerary loading
-        if ($request->wantsJson()) {
-            return response()->json(['message' => 'Profil berhasil disimpan.', 'profile' => $profile]);
+        // Redirect back to the referring page or history
+        $redirectTo = $request->input('redirect_to', 'history');
+
+        if ($redirectTo === 'onboarding') {
+            return redirect()->route('onboarding');
         }
 
-        return redirect()->route('itineraries.index');
+        return redirect()->route('history')->with('toast', 'Profil berhasil disimpan.');
     }
 }

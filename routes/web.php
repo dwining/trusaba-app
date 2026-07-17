@@ -18,6 +18,10 @@ Route::get('/', function () {
     return view('splash');
 })->name('splash');
 
+// Redirect /login to /auth
+Route::redirect('/login', '/auth');
+Route::redirect('/register', '/auth');
+
 // Auth routes (guest only)
 Route::middleware('guest')->group(function () {
     Route::get('/auth', function () {
@@ -47,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
         return view('onboarding');
     })->name('onboarding');
 
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
     // Itinerary

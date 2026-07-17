@@ -1,10 +1,85 @@
-@extends('layouts.app')
+@php
+    $activeItinerary = Auth::user()->itineraries()
+        ->whereIn('status', ['confirmed', 'ongoing', 'draft'])
+        ->latest()
+        ->first();
+    $upcomingTrips = Auth::user()->itineraries()
+        ->whereIn('status', ['confirmed', 'draft'])
+        ->whereDate('start_date', '>=', now())
+        ->count();
+    $activeBookings = Auth::user()->bookings()
+        ->whereIn('status', ['confirmed', 'checked_in'])
+        ->count();
+    $profile = Auth::user()->travellerProfile;
+@endphp
+
+@extends('layouts.app', ['navActive' => 'home'])
 @section('title', 'TruSaba')
 @section('content')
-<div class="app-body">
-    <div class="pad" style="padding-top:20px;text-align:center">
-        <h1>Dashboard</h1>
-        <p class="muted">Dashboard Traveller — akan diisi di Fase 1</p>
+
+<div class="app-header">
+    <img class="logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
+    <div class="title-block">
+        <p class="eyebrow">Dashboard</p>
+        <h1>Halo, {{ explode(' ', Auth::user()->name)[0] }}</h1>
     </div>
 </div>
+
+<div class="app-body">
+    <div class="pad">
+        {{-- Profile completion banner --}}
+        @if(!$profile || !$profile->birth_date)
+        <div class="card" style="background:linear-gradient(145deg,oklch(0.55 0.18 255 / 0.08),oklch(0.85 0.17 87 / 0.1));border-color:oklch(0.55 0.18 255 / 0.25);margin-bottom:16px">
+            <div class="row" style="gap:10px">
+                <div style="flex:1;min-width:0">
+                    <h3 style="font-size:14px">Lengkapi data diri dulu, yuk</h3>
+                    <p class="small muted">Supaya AI TruSaba bisa kasih itinerary yang pas buat kamu.</p>
+                </div>
+                <a href="{{ route('onboarding') }}" class="btn btn-primary btn-sm">Isi Profil</a>
+            </div>
+        </div>
+        @endif
+
+        {{-- Active Trip --}}
+        @if($activeItinerary)
+        <a class="card" href="{{ route('itineraries.show', $activeItinerary->id) }}" style="display:block;text-decoration:none;color:inherit;margin-bottom:12px;border-color:oklch(0.55 0.18 255 / 0.3)">
+            <div class="row-between" style="margin-bottom:8px">
+                <span class="badge {{ $activeItinerary->status === 'ongoing' ? 'badge-success' : 'badge-gold' }}">
+                    {{ $activeItinerary->status === 'ongoing' ? 'Sedang berjalan' : 'Direncanakan' }}
+                </span>
+                <span class="caption">{{ $activeItinerary->start_date->format('d M') }} – {{ $activeItinerary->end_date->format('d M Y') }}</span>
+            </div>
+            <h2>{{ $activeItinerary->title ?: 'Trip ke ' . $activeItinerary->destination }}</h2>
+            <p class="small muted" style="margin-top:4px">{{ $activeItinerary->destination }} · {{ $activeItinerary->duration_days }} hari · {{ $activeItinerary->total_participants }} orang</p>
+            @if($activeItinerary->estimated_budget)
+            <p class="mono small" style="font-weight:600;color:var(--accent-hex);margin-top:6px">Estimasi: Rp {{ number_format($activeItinerary->estimated_budget, 0, ',', '.') }}</p>
+            @endif
+        </a>
+        @endif
+
+        {{-- Quick Stats --}}
+        <div class="row" style="gap:10px;margin-bottom:16px">
+            <div class="card" style="flex:1;text-align:center">
+                <p class="mono" style="font-size:22px;font-weight:600;color:var(--accent-hex)">{{ $upcomingTrips }}</p>
+                <p class="caption">Trip mendatang</p>
+            </div>
+            <div class="card" style="flex:1;text-align:center">
+                <p class="mono" style="font-size:22px;font-weight:600;color:var(--success)">{{ $activeBookings }}</p>
+                <p class="caption">Booking aktif</p>
+            </div>
+        </div>
+
+        {{-- Quick Actions --}}
+        <h2 style="margin-bottom:10px">Mulai perjalanan</h2>
+        <div class="stack">
+            @if($activeItinerary && $activeItinerary->status === 'ongoing')
+            <a href="{{ route('today') }}" class="btn btn-primary btn-block">Lihat Jadwal Hari Ini</a>
+            @endif
+            <a href="{{ route('onboarding') }}" class="btn btn-primary btn-block">+ Buat Itinerary Baru</a>
+            <a href="{{ route('itineraries.index') }}" class="btn btn-secondary btn-block">Itinerary Saya</a>
+            <a href="{{ route('chat') }}" class="btn btn-secondary btn-block">Tanya AI CS</a>
+        </div>
+    </div>
+</div>
+
 @endsection
