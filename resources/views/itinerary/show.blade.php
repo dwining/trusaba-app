@@ -722,6 +722,6 @@ function copyItinerary() {
 
 @endif
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBTs206d5ZJ09vDLApUBn5W1pXtNN_xeMc&libraries=places" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.api_key') }}&libraries=places" async defer></script>
 
 @endsection
