@@ -123,6 +123,11 @@ class ItineraryItemController extends Controller
             return back()->with('toast', 'Cannot delete. This item has active bookings.');
         }
 
+        // Guard 1b: can't delete items already in cart
+        if (\App\Models\CartItem::where('itinerary_item_id', $item->id)->where('user_id', Auth::id())->exists()) {
+            return back()->with('toast', 'Cannot delete. This item is in your cart.');
+        }
+
         // Guard 2: can't delete past items
         $timeOnly = substr((string) $item->schedule_time, -8);
         $itemDateTime = Carbon::parse($itinerary->start_date)
