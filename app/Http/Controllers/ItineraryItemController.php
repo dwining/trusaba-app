@@ -87,6 +87,12 @@ class ItineraryItemController extends Controller
             unset($validated['type']);
         }
 
+        // Don't allow changing type for items already in cart
+        if (isset($validated['type']) && $validated['type'] !== $item->type
+            && \App\Models\CartItem::where('itinerary_item_id', $item->id)->where('user_id', Auth::id())->exists()) {
+            unset($validated['type']);
+        }
+
         $updateData = array_filter($validated, fn ($key) => $key !== '_token', ARRAY_FILTER_USE_KEY);
 
         // Ensure estimated_cost is never null (ConvertEmptyStringsToNull middleware)

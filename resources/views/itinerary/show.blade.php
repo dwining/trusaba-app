@@ -372,12 +372,18 @@
             <button type="button" class="btn btn-sm btn-block" onclick="copyItinerary()" style="border:1px solid var(--border);border-radius:8px;padding:8px;font-size:13px;background:var(--surface)">
                 📋 Copy Itinerary
             </button>
+            @php $activeBookings = $itinerary->bookings()->whereIn('status', ['confirmed', 'pending', 'checked_in'])->get(); @endphp
+            @if($activeBookings->isNotEmpty())
+            <a href="{{ route('bookings.index', ['itinerary_id' => $itinerary->id]) }}" class="btn btn-primary btn-block" style="background:var(--success);text-align:center">
+                🎫 View Booking Voucher ({{ $activeBookings->count() }})
+            </a>
+            @endif
             <form method="POST" action="{{ route('itineraries.update', $itinerary->id) }}" style="display:inline">
                 @csrf @method('PUT')
                 <input type="hidden" name="status" value="confirmed">
                 <button type="submit" class="btn btn-primary btn-block">Confirm & Save</button>
             </form>
-            @if($itinerary->status !== 'cancelled')
+            @if($itinerary->status !== 'cancelled' && $activeBookings->isEmpty())
             <form method="POST" action="{{ route('itineraries.destroy', $itinerary->id) }}"
                   onsubmit="return confirm('Delete this itinerary? This cannot be undone.')">
                 @csrf @method('DELETE')

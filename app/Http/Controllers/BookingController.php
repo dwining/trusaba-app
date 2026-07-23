@@ -14,14 +14,22 @@ use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Auth::user()->bookings()
-            ->with('merchant')
-            ->latest()
-            ->get();
+        $query = Auth::user()->bookings()
+            ->with(['merchant', 'itineraryItem']);
 
-        return view('booking.index', compact('bookings'));
+        $itineraryId = $request->query('itinerary_id');
+        if ($itineraryId) {
+            $query->where('itinerary_id', $itineraryId);
+        }
+
+        $bookings = $query->latest()->get();
+        $itinerary = $itineraryId
+            ? Auth::user()->itineraries()->find($itineraryId)
+            : null;
+
+        return view('booking.index', compact('bookings', 'itinerary'));
     }
 
     public function show(int $id)

@@ -23,7 +23,7 @@
 
         <div class="voucher" data-od-id="digital-voucher">
             <p class="eyebrow" style="color:var(--accent-hex)">{{ $bk->booking_type === 'hotel' ? 'Hotel Voucher' : 'Booking Voucher' }}</p>
-            <h2 style="margin:6px 0 2px">{{ $bk->merchant->name }}</h2>
+            <h2 style="margin:6px 0 2px">{{ $bk->merchant?->name ?? 'Booking' }}</h2>
             <p class="small muted">{{ $bk->resource_detail['room_type'] ?? $bk->booking_type }}</p>
             <p class="caption" style="margin-top:4px">
                 @if($bk->check_in_date)
