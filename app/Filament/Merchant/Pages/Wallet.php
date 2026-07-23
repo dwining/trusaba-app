@@ -20,7 +20,7 @@ class Wallet extends Page
 
     protected string $view = 'filament.merchant.pages.wallet';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Keuangan';
+    protected static string|\UnitEnum|null $navigationGroup = 'Finance';
 
     /** @var Collection<WalletTransaction> */
     public Collection $transactions;
@@ -48,18 +48,18 @@ class Wallet extends Page
                 ->icon('heroicon-o-arrow-down-tray')
                 ->form([
                     TextInput::make('amount')
-                        ->label('Jumlah (Rp)')
+                        ->label('Amount (Rp)')
                         ->numeric()
                         ->required()
                         ->minValue(10000),
                     TextInput::make('bank_name')
-                        ->label('Nama Bank')
+                        ->label('Bank Name')
                         ->required(),
                     TextInput::make('account_number')
-                        ->label('No. Rekening')
+                        ->label('Account Number')
                         ->required(),
                     TextInput::make('account_name')
-                        ->label('Nama Pemilik Rekening')
+                        ->label('Account Holder Name')
                         ->required(),
                 ])
                 ->action(function (array $data): void {
@@ -68,7 +68,7 @@ class Wallet extends Page
                     if ($data['amount'] > $merchant->wallet_balance) {
                         Notification::make()
                             ->danger()
-                            ->title('Saldo tidak mencukupi.')
+                            ->title('Insufficient balance.')
                             ->send();
 
                         return;
@@ -85,7 +85,7 @@ class Wallet extends Page
 
                     Notification::make()
                         ->success()
-                        ->title('Withdrawal request terkirim.')
+                        ->title('Withdrawal request sent.')
                         ->send();
 
                     $this->mount();

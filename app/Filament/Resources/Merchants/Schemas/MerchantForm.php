@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Merchants\Schemas;
 
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -42,6 +43,24 @@ class MerchantForm
                     ->tel()
                     ->required(),
                 Textarea::make('description')
+                    ->columnSpanFull(),
+                TagsInput::make('profile_tags')
+                    ->separator(',')
+                    ->suggestions([
+                        'beach',
+                        'nature',
+                        'culture',
+                        'culinary',
+                        'surfing',
+                        'hiking',
+                        'shopping',
+                        'photography',
+                        'wellness',
+                        'adventure',
+                        'family',
+                        'luxury',
+                        'budget',
+                    ])
                     ->columnSpanFull(),
                 TextInput::make('logo'),
                 Toggle::make('is_active')

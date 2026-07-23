@@ -86,7 +86,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0361-930123',
-            'description' => 'Hotel bintang 4 di pusat Seminyak, dekat Pantai Double Six.',
+            'description' => '4-star hotel in central Seminyak, near Double Six Beach.',
+            'profile_tags' => json_encode(['beach', 'surfing', 'luxury']),
             'is_active' => true,
             'wallet_balance' => 5000000,
         ]);
@@ -102,7 +103,7 @@ class DatabaseSeeder extends Seeder
             ['merchant_id' => $m->id, 'type' => 'credit', 'amount' => 2000000],
             [
                 'balance_after' => 2000000,
-                'description' => 'Booking #BOOK-001 - Deluxe Room 2 malam',
+                'description' => 'Booking #BOOK-001 - Deluxe Room 2 nights',
                 'available_at' => now()->subDays(3),
             ]
         );
@@ -110,7 +111,7 @@ class DatabaseSeeder extends Seeder
             ['merchant_id' => $m->id, 'type' => 'credit', 'amount' => 3500000],
             [
                 'balance_after' => 5500000,
-                'description' => 'Booking #BOOK-002 - Suite Room 3 malam',
+                'description' => 'Booking #BOOK-002 - Suite Room 3 nights',
                 'available_at' => now()->subDay(),
             ]
         );
@@ -118,7 +119,7 @@ class DatabaseSeeder extends Seeder
             ['merchant_id' => $m->id, 'type' => 'debit', 'amount' => 500000],
             [
                 'balance_after' => 5000000,
-                'description' => 'Withdrawal ke Bank BCA',
+                'description' => 'Withdrawal to Bank BCA',
                 'available_at' => now()->subDays(2),
             ]
         );
@@ -134,7 +135,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0361-975888',
-            'description' => 'Resort tenang di tengah Ubud dengan pemandangan sawah yang indah.',
+            'description' => 'Peaceful resort in the heart of Ubud with beautiful rice field views.',
+            'profile_tags' => json_encode(['nature', 'culture', 'wellness']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -154,7 +156,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0361-975489',
-            'description' => 'Restoran ikonik di Ubud dengan menu bebek goreng renyah dan pemandangan sawah yang menenangkan.',
+            'description' => 'Iconic restaurant in Ubud with crispy fried duck and calming rice field views.',
+            'profile_tags' => json_encode(['culinary', 'local', 'culture']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -170,7 +173,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0361-282633',
-            'description' => 'Warung seafood legendaris di Sanur, terkenal dengan sup ikan dan sambal terasi khas Bali.',
+            'description' => 'Legendary seafood eatery in Sanur, famous for fish soup and Balinese shrimp paste sambal.',
+            'profile_tags' => json_encode(['culinary', 'beach', 'local']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -186,7 +190,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0361-755678',
-            'description' => 'Hotel terjangkau di pusat Kuta, hanya 2 menit jalan kaki ke Pantai Kuta.',
+            'description' => 'Affordable hotel in central Kuta, just a 2-minute walk to Kuta Beach.',
+            'profile_tags' => json_encode(['beach', 'budget', 'surfing']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -206,7 +211,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0812-34567890',
-            'description' => 'Paket tour sehari ke Nusa Penida: Kelingking Beach, Broken Beach, Angel\'s Billabong. Termasuk fast boat PP dan makan siang.',
+            'description' => 'Full-day tour package to Nusa Penida: Kelingking Beach, Broken Beach, Angel\'s Billabong. Includes round-trip fast boat and lunch.',
+            'profile_tags' => json_encode(['beach', 'nature', 'photography']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -222,7 +228,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0813-45678901',
-            'description' => 'Layanan sopir pribadi berpengalaman melayani rute Seminyak, Ubud, dan Kuta. Harga per 10 jam.',
+            'description' => 'Experienced private driver service covering Seminyak, Ubud, and Kuta routes. Priced per 10 hours.',
+            'profile_tags' => json_encode(['transport', 'culture', 'nature']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -242,7 +249,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Bali',
             'country' => 'Indonesia',
             'phone' => '0361-299222',
-            'description' => 'Pasar seni tradisional terbesar di Bali, pusat oleh-oleh khas Bali: lukisan, patung, kain batik, dan kerajinan tangan.',
+            'description' => 'Bali\'s largest traditional art market, a hub for Balinese souvenirs: paintings, sculptures, batik fabric, and handicrafts.',
+            'profile_tags' => json_encode(['shopping', 'culture', 'local']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -262,7 +270,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'DI Yogyakarta',
             'country' => 'Indonesia',
             'phone' => '0274-512345',
-            'description' => 'Hotel nyaman di jantung Malioboro, walking distance ke Tugu Yogya dan Pasar Beringharjo.',
+            'description' => 'Comfortable hotel in the heart of Malioboro, walking distance to Tugu Yogya and Beringharjo Market.',
+            'profile_tags' => json_encode(['culture', 'shopping', 'budget']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -282,7 +291,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'DI Yogyakarta',
             'country' => 'Indonesia',
             'phone' => '0274-515678',
-            'description' => 'Gudeg legendaris khas Yogyakarta sejak 1950. Nikmati gudeg komplit dengan krecek, telur, dan ayam kampung.',
+            'description' => 'Legendary Yogyakarta gudeg since 1950. Enjoy complete gudeg with krecek, eggs, and free-range chicken.',
+            'profile_tags' => json_encode(['culinary', 'local', 'culture']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -298,7 +308,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Jawa Tengah',
             'country' => 'Indonesia',
             'phone' => '0274-496401',
-            'description' => 'Paket tour ke Candi Prambanan lengkap dengan tiket masuk dan guide lokal profesional berbahasa Indonesia/Inggris.',
+            'description' => 'Prambanan Temple tour package complete with entrance tickets and a professional local guide fluent in Indonesian/English.',
+            'profile_tags' => json_encode(['culture', 'nature', 'photography']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -318,7 +329,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Jawa Barat',
             'country' => 'Indonesia',
             'phone' => '022-2504567',
-            'description' => 'Resort di kawasan Dago dengan udara sejuk, pemandangan pegunungan, dan kolam renang air panas alami.',
+            'description' => 'Resort in the Dago area with cool air, mountain views, and a natural hot spring pool.',
+            'profile_tags' => json_encode(['shopping', 'nature', 'budget']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -338,7 +350,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Jawa Barat',
             'country' => 'Indonesia',
             'phone' => '022-4203456',
-            'description' => 'Restoran masakan Sunda autentik dengan menu andalan nasi timbel, ayam goreng, dan sambal dadakan.',
+            'description' => 'Authentic Sundanese cuisine restaurant with signature dishes: nasi timbel, fried chicken, and freshly-made sambal.',
+            'profile_tags' => json_encode(['culinary', 'local', 'culture']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -354,7 +367,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'Jawa Barat',
             'country' => 'Indonesia',
             'phone' => '022-7890123',
-            'description' => 'Paket wisata ke Kawah Putih Ciwidey termasuk tiket masuk dan transportasi lokal dari pusat Bandung.',
+            'description' => 'Tour package to Kawah Putih Ciwidey including entrance tickets and local transportation from central Bandung.',
+            'profile_tags' => json_encode(['nature', 'photography', 'shopping']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -374,7 +388,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'NTB',
             'country' => 'Indonesia',
             'phone' => '0370-693456',
-            'description' => 'Hotel tepi pantai di kawasan Senggigi dengan sunset view dan akses langsung ke pasir putih.',
+            'description' => 'Beachfront hotel in the Senggigi area with sunset views and direct access to white sand.',
+            'profile_tags' => json_encode(['beach', 'nature', 'luxury']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);
@@ -394,7 +409,8 @@ class DatabaseSeeder extends Seeder
             'province' => 'NTB',
             'country' => 'Indonesia',
             'phone' => '0819-12345678',
-            'description' => 'Paket snorkeling di 3 titik sekitar Gili Trawangan: Turtle Point, Meno Wall, dan Air Bounty. Termasuk peralatan lengkap.',
+            'description' => 'Snorkeling package at 3 spots around Gili Trawangan: Turtle Point, Meno Wall, and Air Bounty. Includes complete equipment.',
+            'profile_tags' => json_encode(['beach', 'nature', 'adventure']),
             'is_active' => true,
             'wallet_balance' => 0,
         ]);

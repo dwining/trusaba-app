@@ -21,7 +21,7 @@ class ViewBooking extends ViewRecord
 
         if ($record->status === 'pending') {
             $actions[] = Action::make('confirm')
-                ->label('Konfirmasi')
+                ->label('Confirm')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
                 ->requiresConfirmation()
@@ -29,13 +29,13 @@ class ViewBooking extends ViewRecord
                     $record->update(['status' => 'confirmed']);
                     Notification::make()
                         ->success()
-                        ->title('Booking dikonfirmasi.')
+                        ->title('Booking confirmed.')
                         ->send();
                     $this->refreshFormData(['status']);
                 });
 
             $actions[] = Action::make('cancel')
-                ->label('Batalkan')
+                ->label('Cancel')
                 ->icon('heroicon-o-x-circle')
                 ->color('danger')
                 ->requiresConfirmation()
@@ -43,7 +43,7 @@ class ViewBooking extends ViewRecord
                     $record->update(['status' => 'cancelled']);
                     Notification::make()
                         ->warning()
-                        ->title('Booking dibatalkan.')
+                        ->title('Booking cancelled.')
                         ->send();
                     $this->refreshFormData(['status']);
                 });
@@ -56,7 +56,7 @@ class ViewBooking extends ViewRecord
                 ->color('warning')
                 ->form([
                     TextInput::make('voucher_code')
-                        ->label('Kode Voucher')
+                        ->label('Voucher Code')
                         ->required()
                         ->default($record->voucher_code),
                 ])
@@ -64,7 +64,7 @@ class ViewBooking extends ViewRecord
                     if ($data['voucher_code'] !== $record->voucher_code) {
                         Notification::make()
                             ->danger()
-                            ->title('Kode voucher tidak valid.')
+                            ->title('Invalid voucher code.')
                             ->send();
 
                         return;
@@ -73,13 +73,13 @@ class ViewBooking extends ViewRecord
                     $record->update(['status' => 'checked_in']);
                     Notification::make()
                         ->success()
-                        ->title('Check-in berhasil.')
+                        ->title('Check-in successful.')
                         ->send();
                     $this->refreshFormData(['status']);
                 });
 
             $actions[] = Action::make('cancel')
-                ->label('Batalkan')
+                ->label('Cancel')
                 ->icon('heroicon-o-x-circle')
                 ->color('danger')
                 ->requiresConfirmation()
@@ -87,7 +87,7 @@ class ViewBooking extends ViewRecord
                     $record->update(['status' => 'cancelled']);
                     Notification::make()
                         ->warning()
-                        ->title('Booking dibatalkan.')
+                        ->title('Booking cancelled.')
                         ->send();
                     $this->refreshFormData(['status']);
                 });
@@ -95,7 +95,7 @@ class ViewBooking extends ViewRecord
 
         if ($record->status === 'checked_in') {
             $actions[] = Action::make('complete')
-                ->label('Selesaikan')
+                ->label('Complete')
                 ->icon('heroicon-o-flag')
                 ->color('success')
                 ->requiresConfirmation()
@@ -103,7 +103,7 @@ class ViewBooking extends ViewRecord
                     $record->update(['status' => 'completed']);
                     Notification::make()
                         ->success()
-                        ->title('Booking selesai.')
+                        ->title('Booking completed.')
                         ->send();
                     $this->refreshFormData(['status']);
                 });

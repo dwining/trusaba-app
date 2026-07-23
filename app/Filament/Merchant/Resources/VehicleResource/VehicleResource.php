@@ -24,26 +24,26 @@ class VehicleResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
-    protected static ?string $label = 'Kendaraan';
+    protected static ?string $label = 'Vehicle';
 
-    protected static ?string $pluralLabel = 'Kendaraan';
+    protected static ?string $pluralLabel = 'Vehicles';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('vehicle_type')
-                    ->label('Tipe Kendaraan')
+                    ->label('Vehicle Type')
                     ->required(),
                 TextInput::make('vehicle_name')
-                    ->label('Nama Kendaraan')
+                    ->label('Vehicle Name')
                     ->required(),
                 TextInput::make('total_units')
-                    ->label('Total Unit')
+                    ->label('Total Units')
                     ->numeric()
                     ->required(),
                 TextInput::make('price_per_day')
-                    ->label('Harga per Hari')
+                    ->label('Price per Day')
                     ->numeric()
                     ->required(),
             ]);
@@ -54,19 +54,19 @@ class VehicleResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('vehicle_type')
-                    ->label('Tipe')
+                    ->label('Type')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('vehicle_name')
-                    ->label('Nama')
+                    ->label('Name')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('total_units')
-                    ->label('Total Unit')
+                    ->label('Total Units')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('price_per_day')
-                    ->label('Harga /Hari')
+                    ->label('Price /Day')
                     ->numeric()
                     ->sortable(),
             ])
@@ -102,6 +102,6 @@ class VehicleResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Inventori';
+        return 'Inventory';
     }
 }

@@ -293,7 +293,7 @@ class OpenCodeClient
         }
 
         if (! empty($context)) {
-            $message .= "\n\nKonteks:\n".json_encode($context, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+            $message .= "\n\nContext:\n".json_encode($context, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         }
 
         return $this->dispatchPromptSync($message);
@@ -326,10 +326,10 @@ class OpenCodeClient
         $ollamaEndpoint = rtrim(config('opencode.ollama_endpoint'), '/');
         $model = config('opencode.ollama_model', 'mistral:7b');
 
-        $systemPrompt = "Kamu adalah customer service TruSaba yang ramah dan helpful.\nKamu membantu traveller dalam hal pertanyaan itinerary, informasi destinasi, booking, pembayaran, tips traveling.\nJawab dalam bahasa Indonesia dengan ramah dan singkat.";
+        $systemPrompt = "You are TruSaba's friendly customer service.\nYou help travellers with itinerary questions, destination information, booking, payment, and travel tips.\nRespond in English, friendly and concise.\n\nFormat your answers cleanly:\n- Use line breaks between paragraphs.\n- Use \"-\" for bullet points when listing multiple items.\n- Use **bold** to highlight key names and places.\n- Keep responses warm and conversational.";
 
         if (! empty($context)) {
-            $systemPrompt .= "\n\nKonteks traveller:\n".json_encode($context, JSON_UNESCAPED_UNICODE);
+            $systemPrompt .= "\n\nTraveller context:\n".json_encode($context, JSON_UNESCAPED_UNICODE);
         }
 
         $response = Http::timeout($this->timeout)
@@ -343,7 +343,7 @@ class OpenCodeClient
                 'options' => ['temperature' => 0.8],
             ]);
 
-        return $response->json()['message']['content'] ?? 'Maaf, ada gangguan. Coba lagi ya.';
+        return $response->json()['message']['content'] ?? 'Sorry, something went wrong. Please try again.';
     }
 
     // ─── DeepSeek Backend ───────────────────────────────────────────────
@@ -376,10 +376,10 @@ class OpenCodeClient
         $model = config('opencode.deepseek_model', 'deepseek-chat');
         $apiKey = config('opencode.deepseek_api_key');
 
-        $systemPrompt = "Kamu adalah customer service TruSaba yang ramah dan helpful.\nKamu membantu traveller dalam hal pertanyaan itinerary, informasi destinasi, booking, pembayaran, tips traveling.\nJawab dalam bahasa Indonesia dengan ramah dan singkat.";
+        $systemPrompt = "You are TruSaba's friendly customer service.\nYou help travellers with itinerary questions, destination information, booking, payment, and travel tips.\nRespond in English, friendly and concise.\n\nFormat your answers cleanly:\n- Use line breaks between paragraphs.\n- Use \"-\" for bullet points when listing multiple items.\n- Use **bold** to highlight key names and places.\n- Keep responses warm and conversational.";
 
         if (! empty($context)) {
-            $systemPrompt .= "\n\nKonteks traveller:\n".json_encode($context, JSON_UNESCAPED_UNICODE);
+            $systemPrompt .= "\n\nTraveller context:\n".json_encode($context, JSON_UNESCAPED_UNICODE);
         }
 
         $response = Http::timeout($this->timeout)
@@ -395,7 +395,7 @@ class OpenCodeClient
                 'max_tokens' => 1024,
             ]);
 
-        return $response->json()['choices'][0]['message']['content'] ?? 'Maaf, ada gangguan. Coba lagi ya.';
+        return $response->json()['choices'][0]['message']['content'] ?? 'Sorry, something went wrong. Please try again.';
     }
 
     /**
@@ -424,6 +424,10 @@ class OpenCodeClient
         $text = preg_replace('/^```(?:json)?\s*\n?/i', '', $text);
         $text = preg_replace('/\n?```\s*$/i', '', $text);
         $text = trim($text);
+
+        // Sanitize: remove control characters that break JSON parsing
+        // (except \n, \r, \t which are valid whitespace)
+        $text = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $text);
 
         // Try direct JSON parse first (expected pure JSON)
         $decoded = json_decode($text, true);

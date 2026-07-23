@@ -19,14 +19,14 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Password::min(8)],
             'terms' => ['accepted'],
         ], [
-            'name.required' => 'Nama wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email sudah terdaftar.',
-            'password.required' => 'Password wajib diisi.',
-            'password.min' => 'Password minimal 8 karakter.',
-            'password.confirmed' => 'Konfirmasi password tidak cocok.',
-            'terms.accepted' => 'Anda harus menyetujui syarat & kebijakan.',
+            'name.required' => 'Name is required.',
+            'email.required' => 'Email is required.',
+            'email.email' => 'Email format is invalid.',
+            'email.unique' => 'Email is already registered.',
+            'password.required' => 'Password is required.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Password confirmation does not match.',
+            'terms.accepted' => 'You must agree to the terms & policy.',
         ]);
 
         $user = User::create([
@@ -39,6 +39,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('onboarding')->with('toast', 'Akun berhasil dibuat!');
+        return redirect()->route('onboarding')->with('toast', 'Account created successfully!');
     }
 }

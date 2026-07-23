@@ -1,12 +1,12 @@
-@extends('layouts.app', ['navActive' => ''])
+@extends('layouts.app', ['navActive' => 'home'])
 
-@section('title', 'TruSaba · Profil Trip')
+@section('title', 'TruSaba · Trip Profile')
 
 @section('content')
 <div class="app-header">
     <div class="title-block">
-        <p class="eyebrow">Langkah <span id="stepLabel">1</span>/4</p>
-        <h1>Ceritakan trip-mu</h1>
+        <p class="eyebrow">Step <span id="stepLabel">1</span>/4</p>
+        <h1>Tell us about your trip</h1>
     </div>
 </div>
 
@@ -23,72 +23,81 @@
 @php $profile = Auth::user()->travellerProfile; @endphp
 
 <div class="app-body has-sticky" id="formBody" style="padding-bottom:calc(var(--nav-h) + var(--safe-b) + 90px)">
-    {{-- Step 0: Destinasi --}}
+    {{-- Step 0: Destination --}}
     <section class="pad step-panel" data-panel="0">
-        <p class="muted small" style="margin-bottom:16px">AI TruSaba butuh sedikit info agar itinerary terasa personal.</p>
+        <p class="muted small" style="margin-bottom:16px">TruSaba AI needs a little info to make your itinerary feel personal.</p>
         
         {{-- Profile completion CTA --}}
         @if(!$profile || !$profile->birth_date)
         <div class="card" style="background:linear-gradient(145deg,oklch(0.58 0.22 27 / 0.08),oklch(0.85 0.17 87 / 0.1));border-color:oklch(0.58 0.22 27 / 0.2);margin-bottom:16px">
             <div class="row" style="gap:10px">
                 <div style="flex:1;min-width:0">
-                    <h3 style="font-size:14px">Lengkapi tanggal lahirmu dulu</h3>
-                    <p class="small muted">Tanggal lahir membantu AI menyusun itinerary sesuai usiamu.</p>
+                    <h3 style="font-size:14px">Fill in your birth date first</h3>
+                    <p class="small muted">Your birth date helps AI craft an itinerary suited to your age.</p>
                 </div>
-                <a href="{{ route('profile.edit') }}" class="btn btn-danger btn-sm" style="flex-shrink:0">Isi Profile</a>
+                <a href="{{ route('profile.edit') }}" class="btn btn-danger btn-sm" style="flex-shrink:0">Fill Profile</a>
             </div>
         </div>
         @endif
 
         <div class="field">
-            <label class="field-label" for="dest">Destinasi <span class="req">*</span></label>
-            <input class="input" id="dest" type="text" value="Bali" placeholder="Kota / destinasi" required />
+            <label class="field-label" for="dest">Destination <span class="req">*</span></label>
+            <input class="input" id="dest" type="text" value="Bali" placeholder="City / destination" required />
+        </div>
+
+        <div class="field">
+            <label class="field-label" for="travelers">Travelers <span class="req">*</span></label>
+            <select class="select" id="travelers">
+                @for($i = 1; $i <= 10; $i++)
+                <option value="{{ $i }}" {{ $i == 2 ? 'selected' : '' }}>{{ $i }} {{ Str::plural('person', $i) }}</option>
+                @endfor
+            </select>
         </div>
 
         {{-- Hidden: birth_date from profile --}}
         <input type="hidden" id="dob" value="{{ $profile?->birth_date?->format('Y-m-d') ?? '' }}" />
     </section>
 
-    {{-- Step 1: Hobby --}}
+    {{-- Step 1: Hobbies --}}
     <section class="pad step-panel" data-panel="1" hidden>
-        <p class="muted small" style="margin-bottom:16px">Pilih hobi yang sering kamu lakukan saat traveling.</p>
-        <label class="field-label">Hobby</label>
+        <p class="muted small" style="margin-bottom:16px">Choose hobbies you often do while traveling.</p>
+        <label class="field-label">Hobbies</label>
         <div class="chips" id="hobbyChips">
             @php $profileHobbies = $profile?->hobbies ?? ['fotografi', 'snorkeling']; @endphp
-            <button type="button" class="chip {{ in_array('fotografi', $profileHobbies) ? 'active' : '' }}" data-v="fotografi">Fotografi</button>
-            <button type="button" class="chip {{ in_array('kuliner', $profileHobbies) ? 'active' : '' }}" data-v="kuliner">Kuliner</button>
+            <button type="button" class="chip {{ in_array('fotografi', $profileHobbies) ? 'active' : '' }}" data-v="fotografi">Photography</button>
+            <button type="button" class="chip {{ in_array('kuliner', $profileHobbies) ? 'active' : '' }}" data-v="kuliner">Culinary</button>
             <button type="button" class="chip {{ in_array('snorkeling', $profileHobbies) ? 'active' : '' }}" data-v="snorkeling">Snorkeling</button>
             <button type="button" class="chip {{ in_array('hiking', $profileHobbies) ? 'active' : '' }}" data-v="hiking">Hiking</button>
-            <button type="button" class="chip {{ in_array('belanja', $profileHobbies) ? 'active' : '' }}" data-v="belanja">Belanja</button>
+            <button type="button" class="chip {{ in_array('belanja', $profileHobbies) ? 'active' : '' }}" data-v="belanja">Shopping</button>
             <button type="button" class="chip {{ in_array('yoga', $profileHobbies) ? 'active' : '' }}" data-v="yoga">Yoga</button>
-            <button type="button" class="chip {{ in_array('musik', $profileHobbies) ? 'active' : '' }}" data-v="musik">Musik</button>
+            <button type="button" class="chip {{ in_array('musik', $profileHobbies) ? 'active' : '' }}" data-v="musik">Music</button>
             <button type="button" class="chip {{ in_array('surfing', $profileHobbies) ? 'active' : '' }}" data-v="surfing">Surfing</button>
         </div>
     </section>
 
-    {{-- Step 2: Interest --}}
+    {{-- Step 2: Interests --}}
     <section class="pad step-panel" data-panel="2" hidden>
-        <p class="muted small" style="margin-bottom:16px">Minat membantu AI merekomendasikan spot yang pas.</p>
-        <label class="field-label">Interest</label>
+        <p class="muted small" style="margin-bottom:16px">Interests help AI recommend the right spots.</p>
+        <label class="field-label">Interests</label>
         <div class="chips" id="interestChips">
             @php $profileInterests = $profile?->interests ?? ['pantai', 'budaya', 'kuliner-lokal']; @endphp
-            <button type="button" class="chip {{ in_array('pantai', $profileInterests) ? 'active' : '' }}" data-v="pantai">Pantai</button>
-            <button type="button" class="chip {{ in_array('budaya', $profileInterests) ? 'active' : '' }}" data-v="budaya">Budaya</button>
-            <button type="button" class="chip {{ in_array('alam', $profileInterests) ? 'active' : '' }}" data-v="alam">Alam</button>
+            <button type="button" class="chip {{ in_array('pantai', $profileInterests) ? 'active' : '' }}" data-v="pantai">Beach</button>
+            <button type="button" class="chip {{ in_array('budaya', $profileInterests) ? 'active' : '' }}" data-v="budaya">Culture</button>
+            <button type="button" class="chip {{ in_array('alam', $profileInterests) ? 'active' : '' }}" data-v="alam">Nature</button>
             <button type="button" class="chip {{ in_array('nightlife', $profileInterests) ? 'active' : '' }}" data-v="nightlife">Nightlife</button>
             <button type="button" class="chip {{ in_array('wellness', $profileInterests) ? 'active' : '' }}" data-v="wellness">Wellness</button>
-            <button type="button" class="chip {{ in_array('kuliner-lokal', $profileInterests) ? 'active' : '' }}" data-v="kuliner-lokal">Kuliner lokal</button>
+            <button type="button" class="chip {{ in_array('kuliner-lokal', $profileInterests) ? 'active' : '' }}" data-v="kuliner-lokal">Local cuisine</button>
             <button type="button" class="chip {{ in_array('adventure', $profileInterests) ? 'active' : '' }}" data-v="adventure">Adventure</button>
-            <button type="button" class="chip {{ in_array('foto-spot', $profileInterests) ? 'active' : '' }}" data-v="foto-spot">Foto spot</button>
+            <button type="button" class="chip {{ in_array('foto-spot', $profileInterests) ? 'active' : '' }}" data-v="foto-spot">Photo spots</button>
         </div>
     </section>
 
     {{-- Step 3: Budget + Dates --}}
     <section class="pad step-panel" data-panel="3" hidden>
-        <p class="muted small" style="margin-bottom:16px">Estimasi budget & lama traveling untuk 1 orang.</p>
+        <p class="muted small" style="margin-bottom:16px">Budget estimate & trip duration for 1 person.</p>
         <div class="field">
             <div class="row-between">
-                <label class="field-label" style="margin:0">Budget trip</label>
+                <label class="field-label" style="margin:0">Trip budget</label>
                 <span class="mono" style="font-weight:600;color:var(--accent-hex)" id="budgetVal">
                     Rp {{ number_format(5000000, 0, ',', '.') }}
                 </span>
@@ -97,11 +106,11 @@
                 <input type="range" id="budget" min="1000000" max="20000000" step="500000" value="5000000" />
             </div>
             <div class="row-between caption">
-                <span>Rp 1jt</span><span>Rp 20jt</span>
+                <span>Rp 1M</span><span>Rp 20M</span>
             </div>
         </div>
         <div class="field">
-            <label class="field-label">Lama traveling</label>
+            <label class="field-label">Trip duration</label>
             <div class="row" style="gap:10px">
                 <div style="flex:1">
                     <span class="caption">Check-in</span>
@@ -112,7 +121,7 @@
                     <input class="input" type="date" id="dateEnd" value="2026-08-15" />
                 </div>
             </div>
-            <p class="caption" style="margin-top:8px" id="durationHint">± 3 hari · 2 malam</p>
+            <p class="caption" style="margin-top:8px" id="durationHint">± 3 days · 2 nights</p>
         </div>
     </section>
 </div>
@@ -120,8 +129,8 @@
 {{-- Sticky CTA --}}
 <div class="sticky-cta" style="bottom:calc(var(--nav-h) + var(--safe-b));z-index:21">
     <div class="row" style="gap:10px">
-        <button type="button" class="btn btn-secondary" id="btnBack" style="display:none;flex:0 0 auto;padding:0 16px">Kembali</button>
-        <button type="button" class="btn btn-primary btn-block" id="btnNext">Lanjut</button>
+        <button type="button" class="btn btn-secondary" id="btnBack" style="display:none;flex:0 0 auto;padding:0 16px">Back</button>
+        <button type="button" class="btn btn-primary btn-block" id="btnNext">Next</button>
     </div>
 </div>
 
@@ -149,7 +158,7 @@
             var e = document.getElementById('dateEnd').value;
             if (!s || !e) return;
             var d = daysBetween(s, e);
-            document.getElementById('durationHint').textContent = '± ' + d + ' hari · ' + Math.max(0, d - 1) + ' malam';
+            document.getElementById('durationHint').textContent = '± ' + d + ' days · ' + Math.max(0, d - 1) + ' nights';
         }
         document.getElementById('budget').addEventListener('input', function (e) {
             document.getElementById('budgetVal').textContent = formatRp(+e.target.value);
@@ -180,12 +189,13 @@
             });
             stepLabel.textContent = String(step + 1);
             btnBack.style.display = step === 0 ? 'none' : 'inline-flex';
-            btnNext.textContent = step === total - 1 ? 'Proses' : 'Lanjut';
+            btnNext.textContent = step === total - 1 ? 'Process' : 'Next';
         }
 
         function collectData() {
             var dest = document.getElementById('dest').value.trim();
             var dob = document.getElementById('dob').value;
+            var travelers = document.getElementById('travelers').value;
             var hobbies = [];
             document.querySelectorAll('#hobbyChips .chip.active').forEach(function (c) {
                 hobbies.push(c.getAttribute('data-v'));
@@ -200,6 +210,7 @@
             return {
                 destination: dest,
                 birth_date: dob,
+                travelers: travelers,
                 hobbies: hobbies,
                 interests: interests,
                 budget: budget,
@@ -213,7 +224,7 @@
             if (step === 0) {
                 var dest = document.getElementById('dest').value.trim();
                 if (!dest) {
-                    alert('Destinasi wajib diisi.');
+                    alert('Destination is required.');
                     return;
                 }
             }
@@ -241,6 +252,7 @@
                     end_date: payload.date_end,
                     budget: payload.budget,
                     birth_date: payload.birth_date,
+                    travelers: payload.travelers,
                 };
 
                 Object.keys(fieldMap).forEach(function (key) {

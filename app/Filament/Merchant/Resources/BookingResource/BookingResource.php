@@ -29,12 +29,12 @@ class BookingResource extends Resource
     {
         return $schema
             ->components([
-                Section::make('Detail Booking')
+                Section::make('Booking Details')
                     ->schema([
                         TextEntry::make('voucher_code')
-                            ->label('Kode Voucher'),
+                            ->label('Voucher Code'),
                         TextEntry::make('booking_type')
-                            ->label('Tipe Booking'),
+                            ->label('Booking Type'),
                         TextEntry::make('status')
                             ->label('Status')
                             ->badge(),
@@ -49,21 +49,21 @@ class BookingResource extends Resource
                             ->label('Check-out')
                             ->date(),
                         TextEntry::make('booking_date')
-                            ->label('Tanggal Booking')
+                            ->label('Booking Date')
                             ->date(),
                         TextEntry::make('quantity')
-                            ->label('Jumlah'),
+                            ->label('Quantity'),
                         TextEntry::make('amount')
                             ->label('Total')
                             ->numeric(),
                         TextEntry::make('notes')
-                            ->label('Catatan'),
+                            ->label('Notes'),
                         TextEntry::make('created_at')
-                            ->label('Dibuat')
+                            ->label('Created')
                             ->dateTime(),
                     ])
                     ->columns(2),
-                Section::make('Detail Resource')
+                Section::make('Resource Details')
                     ->schema([
                         TextEntry::make('resource_detail')
                             ->label('Resource Detail')
@@ -81,7 +81,7 @@ class BookingResource extends Resource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('booking_type')
-                    ->label('Tipe')
+                    ->label('Type')
                     ->sortable(),
                 TextColumn::make('check_in_date')
                     ->label('Check-in')
@@ -92,7 +92,7 @@ class BookingResource extends Resource
                     ->date()
                     ->sortable(),
                 TextColumn::make('amount')
-                    ->label('Jumlah')
+                    ->label('Amount')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
@@ -100,7 +100,7 @@ class BookingResource extends Resource
                     ->badge()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Dibuat')
+                    ->label('Created')
                     ->dateTime()
                     ->sortable(),
             ])
@@ -144,6 +144,6 @@ class BookingResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Pesanan';
+        return 'Orders';
     }
 }

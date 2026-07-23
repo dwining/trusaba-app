@@ -1,5 +1,5 @@
 @extends('layouts.app', ['navActive' => 'home'])
-@section('title', 'TruSaba · AI Menyusun Itinerary')
+@section('title', 'TruSaba · AI Building Itinerary')
 @section('content')
 <div class="app-body no-nav" style="display:flex;flex-direction:column">
     <div class="loading-wrap">
@@ -9,15 +9,15 @@
                 <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:var(--accent-hex);fill:none;stroke-width:2"><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/><circle cx="12" cy="12" r="4"/></svg>
             </div>
         </div>
-        <p class="eyebrow" style="color:var(--accent-hex);margin-bottom:8px">AI TruSaba</p>
-        <h1 style="margin-bottom:8px">Sedang menyusun itinerary</h1>
+        <p class="eyebrow" style="color:var(--accent-hex);margin-bottom:8px">TruSaba AI</p>
+        <h1 style="margin-bottom:8px">Building your itinerary</h1>
         <p class="muted small" style="max-width:280px;margin:0 auto">
-            Trip {{ $itinerary->destination }} · {{ $itinerary->duration_days }} hari disesuaikan profil, budget, dan minatmu.
+            {{ $itinerary->destination }} trip · {{ $itinerary->duration_days }} days tailored to your profile, budget, and interests.
         </p>
         <div class="progress-soft">
             <div class="fill"></div>
         </div>
-        <p class="microcopy" id="micro">Sedang mencari tempat terbaik untukmu…</p>
+        <p class="microcopy" id="micro">Finding the best places for you…</p>
     </div>
 </div>
 
@@ -27,11 +27,11 @@
     var itineraryId = {{ $itinerary->id }};
     var microEl = document.getElementById('micro');
     var lines = [
-        'Sedang mencari tempat terbaik untukmu…',
-        'Menyesuaikan budget akomodasi…',
-        'Mencari restoran lokal yang cocok dengan seleramu…',
-        'Menyusun jadwal harian biar tidak kelelahan…',
-        'Hampir siap — packing virtual dulu ya…'
+        'Finding the best places for you…',
+        'Adjusting accommodation budget…',
+        'Finding local restaurants that match your taste…',
+        'Arranging daily schedule so you don\'t get tired…',
+        'Almost ready — doing a virtual pack first…'
     ];
     var lineIndex = 0;
     var microInterval = setInterval(function () {
@@ -55,7 +55,7 @@
                 } else if (data.status === 'failed') {
                     clearInterval(microInterval);
                     clearInterval(pollInterval);
-                    microEl.textContent = 'Maaf, terjadi kesalahan. Silakan coba lagi.';
+                    microEl.textContent = 'Sorry, an error occurred. Please try again.';
                     microEl.style.color = 'var(--danger)';
                 }
             })

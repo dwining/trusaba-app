@@ -25,27 +25,27 @@ class RoomResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
-    protected static ?string $label = 'Kamar';
+    protected static ?string $label = 'Room';
 
-    protected static ?string $pluralLabel = 'Kamar';
+    protected static ?string $pluralLabel = 'Rooms';
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('room_type')
-                    ->label('Tipe Kamar')
+                    ->label('Room Type')
                     ->required(),
                 TextInput::make('total_rooms')
-                    ->label('Total Kamar')
+                    ->label('Total Rooms')
                     ->numeric()
                     ->required(),
                 TextInput::make('price_per_night')
-                    ->label('Harga per Malam')
+                    ->label('Price per Night')
                     ->numeric()
                     ->required(),
                 Textarea::make('description')
-                    ->label('Deskripsi')
+                    ->label('Description')
                     ->columnSpanFull(),
             ]);
     }
@@ -55,15 +55,15 @@ class RoomResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('room_type')
-                    ->label('Tipe Kamar')
+                    ->label('Room Type')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('total_rooms')
-                    ->label('Total Kamar')
+                    ->label('Total Rooms')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('price_per_night')
-                    ->label('Harga /Malam')
+                    ->label('Price /Night')
                     ->numeric()
                     ->sortable(),
             ])
@@ -99,6 +99,6 @@ class RoomResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Inventori';
+        return 'Inventory';
     }
 }

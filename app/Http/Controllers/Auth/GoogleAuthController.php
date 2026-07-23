@@ -12,7 +12,7 @@ class GoogleAuthController extends Controller
     public function redirect()
     {
         if (! config('services.google.client_id')) {
-            return redirect()->route('auth')->with('toast', 'Google login belum dikonfigurasi.');
+            return redirect()->route('auth')->with('toast', 'Google login is not configured yet.');
         }
 
         return Socialite::driver('google')->redirect();
@@ -21,7 +21,7 @@ class GoogleAuthController extends Controller
     public function callback()
     {
         if (! config('services.google.client_id')) {
-            return redirect()->route('auth')->with('toast', 'Google login belum dikonfigurasi.');
+            return redirect()->route('auth')->with('toast', 'Google login is not configured yet.');
         }
 
         $googleUser = Socialite::driver('google')->user();

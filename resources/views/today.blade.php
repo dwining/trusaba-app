@@ -1,11 +1,11 @@
 @extends('layouts.app', ['showSos' => true, 'navActive' => 'home'])
-@section('title', 'TruSaba · Hari Ini')
+@section('title', 'TruSaba · Today')
 @section('content')
 
 <div class="app-header">
     <div class="title-block">
         <p class="eyebrow">On-trip · Day {{ $dayNumber ?? '-' }}</p>
-        <h1>Hari Ini</h1>
+        <h1>Today</h1>
     </div>
     <span class="badge badge-success">Live</span>
 </div>
@@ -13,21 +13,21 @@
 <div class="app-body">
     <div class="pad">
         <div class="card-soft" style="margin-bottom:16px">
-            <p class="small muted">{{ $today->translatedFormat('D, d M Y') }} · {{ $itinerary?->destination ?? 'Belum ada trip' }}</p>
-            <h2 style="margin-top:4px">{{ $itinerary ? 'Semangat, traveller!' : 'Siap berwisata?' }}</h2>
+            <p class="small muted">{{ $today->translatedFormat('D, d M Y') }} · {{ $itinerary?->destination ?? 'No trip yet' }}</p>
+            <h2 style="margin-top:4px">{{ $itinerary ? 'Stay excited, traveller!' : 'Ready to explore?' }}</h2>
             <p class="small muted" style="margin-top:4px">
                 @if($todayItems->isNotEmpty())
-                {{ $todayItems->count() }} aktivitas · cuaca cerah 29°
+                {{ $todayItems->count() }} activities · sunny 29°
                 @else
-                Belum ada jadwal hari ini
+                No schedule for today
                 @endif
             </p>
         </div>
 
         <div class="row-between" style="margin-bottom:10px">
-            <h2>Jadwal hari ini</h2>
+            <h2>Today's schedule</h2>
             @if($itinerary)
-            <a href="{{ route('itineraries.show', $itinerary->id) }}" class="btn btn-ghost btn-sm">Lihat semua</a>
+            <a href="{{ route('itineraries.show', $itinerary->id) }}" class="btn btn-ghost btn-sm">View all</a>
             @endif
         </div>
 
@@ -52,7 +52,7 @@
             @endphp
             <div class="tl-item">
                 <div class="tl-dot {{ $isPast ? 'muted' : '' }}{{ $item->type === 'restaurant' && !$isPast ? ' gold' : '' }}"></div>
-                <p class="tl-time">{{ $itemTime }} · {{ $isPast ? 'Selesai' : ($isCurrent ? 'Sekarang' : '') }}</p>
+                <p class="tl-time">{{ $itemTime }} · {{ $isPast ? 'Done' : ($isCurrent ? 'Now' : '') }}</p>
                 <div class="card" style="{{ $isPast ? 'opacity:0.72' : '' }}{{ $isCurrent ? 'border-color:var(--accent-hex)' : '' }}">
                     <div class="row">
                         <div class="act-icon {{ $actClass }}">
@@ -76,13 +76,13 @@
         </div>
         @else
         <div class="card" style="text-align:center;padding:32px 20px">
-            <p class="muted">Belum ada jadwal untuk hari ini.</p>
-            <a href="{{ route('itineraries.index') }}" class="btn btn-primary btn-sm" style="margin-top:12px">Lihat Itinerary</a>
+            <p class="muted">No schedule for today.</p>
+            <a href="{{ route('itineraries.index') }}" class="btn btn-primary btn-sm" style="margin-top:12px">View Itinerary</a>
         </div>
         @endif
 
         @if($vouchers->isNotEmpty())
-        <h2 style="margin:20px 0 10px">Voucher aktif</h2>
+        <h2 style="margin:20px 0 10px">Active vouchers</h2>
         @foreach($vouchers as $voucher)
         <a class="list-card" href="{{ route('bookings.success', $voucher->id) }}" style="margin-bottom:12px">
             <div class="ph-img thumb" style="background:linear-gradient(145deg,oklch(0.55 0.1 255 / 0.25),oklch(0.85 0.12 87 / 0.3))"></div>
@@ -107,7 +107,7 @@ document.getElementById('btnSendSos')?.addEventListener('click', function() {
     var form = document.createElement('form');
     form.method = 'POST';
     form.action = '{{ route('sos.send') }}';
-    form.innerHTML = '<input type="hidden" name="_token" value="{{ csrf_token() }}"><input type="hidden" name="message" value="Sinyal darurat">';
+    form.innerHTML = '<input type="hidden" name="_token" value="{{ csrf_token() }}"><input type="hidden" name="message" value="Emergency signal">';
     document.body.appendChild(form);
     form.submit();
 

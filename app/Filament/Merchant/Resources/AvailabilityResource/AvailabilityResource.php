@@ -19,27 +19,27 @@ class AvailabilityResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendar;
 
-    protected static ?string $label = 'Ketersediaan';
+    protected static ?string $label = 'Availability';
 
-    protected static ?string $pluralLabel = 'Ketersediaan';
+    protected static ?string $pluralLabel = 'Availability';
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 TextColumn::make('resource_type')
-                    ->label('Tipe Resource')
+                    ->label('Resource Type')
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('resource_id')
                     ->label('Resource ID')
                     ->sortable(),
                 TextColumn::make('date')
-                    ->label('Tanggal')
+                    ->label('Date')
                     ->date()
                     ->sortable(),
                 TextColumn::make('available_qty')
-                    ->label('Tersedia')
+                    ->label('Available')
                     ->numeric()
                     ->sortable(),
             ])
@@ -69,6 +69,6 @@ class AvailabilityResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Inventori';
+        return 'Inventory';
     }
 }

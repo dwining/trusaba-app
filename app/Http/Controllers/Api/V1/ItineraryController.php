@@ -45,7 +45,7 @@ class ItineraryController extends Controller
         $endDate = Carbon::parse($validated['end_date']);
 
         $itinerary = Auth::user()->itineraries()->create([
-            'title' => 'Trip ke '.$validated['destination'],
+            'title' => 'Trip to '.$validated['destination'],
             'destination' => $validated['destination'],
             'start_date' => $startDate,
             'end_date' => $endDate,
@@ -58,7 +58,7 @@ class ItineraryController extends Controller
         GenerateItineraryJob::dispatch($itinerary->id);
 
         return response()->json([
-            'message' => 'Itinerary sedang diproses.',
+            'message' => 'Itinerary is being processed.',
             'itinerary_id' => $itinerary->id,
             'status' => 'processing',
         ], 202);
@@ -88,7 +88,7 @@ class ItineraryController extends Controller
 
         $itinerary->update($validated);
 
-        return response()->json(['message' => 'Itinerary berhasil diperbarui.', 'itinerary' => $itinerary]);
+        return response()->json(['message' => 'Itinerary updated successfully.', 'itinerary' => $itinerary]);
     }
 
     public function destroy(int $id)
@@ -96,11 +96,11 @@ class ItineraryController extends Controller
         $itinerary = Auth::user()->itineraries()->findOrFail($id);
 
         if ($itinerary->bookings()->whereNotIn('status', ['cancelled'])->exists()) {
-            return response()->json(['message' => 'Tidak bisa menghapus itinerary dengan booking aktif.'], 400);
+            return response()->json(['message' => 'Cannot delete itinerary with active bookings.'], 400);
         }
 
         $itinerary->delete();
 
-        return response()->json(['message' => 'Itinerary berhasil dihapus.']);
+        return response()->json(['message' => 'Itinerary deleted successfully.']);
     }
 }

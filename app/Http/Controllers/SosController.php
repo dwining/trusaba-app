@@ -18,17 +18,17 @@ class SosController extends Controller
         $sos = Auth::user()->sosLogs()->create([
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
-            'message' => $validated['message'] ?? 'Sinyal darurat dari traveller.',
+            'message' => $validated['message'] ?? 'SOS alert from traveller.',
             'status' => 'open',
         ]);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'message' => 'Sinyal darurat terkirim.',
+                'message' => 'SOS alert sent.',
                 'sos_id' => $sos->id,
             ]);
         }
 
-        return redirect()->route('today')->with('toast', 'Sinyal darurat terkirim. Tim kami akan segera merespon.');
+        return redirect()->route('today')->with('toast', 'SOS alert sent. Our team will respond shortly.');
     }
 }

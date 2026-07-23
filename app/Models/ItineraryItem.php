@@ -16,6 +16,8 @@ class ItineraryItem extends Model
         'name',
         'description',
         'location',
+        'latitude',
+        'longitude',
         'estimated_cost',
         'is_bookable',
         'merchant_id',

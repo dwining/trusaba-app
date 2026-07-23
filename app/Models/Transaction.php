@@ -36,6 +36,11 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     public function walletTransactions(): HasMany
     {
         return $this->hasMany(WalletTransaction::class);

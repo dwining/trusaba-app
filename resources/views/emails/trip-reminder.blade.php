@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head><meta charset="UTF-8"></head>
 <body style="font-family: 'Plus Jakarta Sans', sans-serif; background: #f5f7fa; padding: 20px;">
     <div style="max-width: 480px; margin: 0 auto; background: #fff; border-radius: 14px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
@@ -10,42 +10,42 @@
 
         <h2 style="font-size: 18px; color: #333;">
             @if($daysUntil === 1)
-            Besok berangkat, {{ $userName }}!
+            Leaving tomorrow, {{ $userName }}!
             @else
-            {{ $daysUntil }} hari lagi, {{ $userName }}!
+            {{ $daysUntil }} days to go, {{ $userName }}!
             @endif
         </h2>
 
         <p style="color: #666; line-height: 1.6;">
-            Trip ke <strong>{{ $itinerary->destination }}</strong> tinggal {{ $daysUntil }} hari lagi.
+            Trip to <strong>{{ $itinerary->destination }}</strong> is {{ $daysUntil }} days away.
             @if($daysUntil === 1)
-            Saatnya packing dan pastikan semua voucher sudah disimpan.
+            Time to pack and make sure all vouchers are saved.
             @else
-            Yuk cek lagi itinerary-mu dan pastikan semuanya sudah siap.
+            Check your itinerary again and make sure everything is ready.
             @endif
         </p>
 
         <table style="width: 100%; margin: 16px 0; border-collapse: collapse;">
             <tr>
-                <td style="padding: 6px 0; color: #888;">Destinasi</td>
+                <td style="padding: 6px 0; color: #888;">Destination</td>
                 <td style="font-weight: 600;">{{ $itinerary->destination }}</td>
             </tr>
             <tr>
-                <td style="padding: 6px 0; color: #888;">Tanggal</td>
+                <td style="padding: 6px 0; color: #888;">Dates</td>
                 <td style="font-weight: 600;">{{ $itinerary->start_date->format('d M') }} – {{ $itinerary->end_date->format('d M Y') }}</td>
             </tr>
             <tr>
-                <td style="padding: 6px 0; color: #888;">Durasi</td>
-                <td style="font-weight: 600;">{{ $itinerary->duration_days }} hari · {{ $itinerary->total_participants }} orang</td>
+                <td style="padding: 6px 0; color: #888;">Duration</td>
+                <td style="font-weight: 600;">{{ $itinerary->duration_days }} days · {{ $itinerary->total_participants }} people</td>
             </tr>
         </table>
 
         <a href="{{ url('/today') }}" style="display: block; background: #066FDA; color: #fff; text-align: center; padding: 12px; border-radius: 10px; text-decoration: none; font-weight: 600; margin: 16px 0;">
-            Buka Dashboard Hari Ini
+            Open Today Dashboard
         </a>
 
         <p style="font-size: 12px; color: #aaa; text-align: center; margin-top: 16px;">
-            TruSaba — Yakin, Senang, Nyaman dalam Bertraveling.
+            TruSaba — Confident, Happy, Comfortable in Traveling.
         </p>
     </div>
 </body>

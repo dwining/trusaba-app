@@ -19,10 +19,10 @@ class SosController extends Controller
         $sos = Auth::user()->sosLogs()->create([
             'latitude' => $validated['latitude'] ?? null,
             'longitude' => $validated['longitude'] ?? null,
-            'message' => $validated['message'] ?? 'Sinyal darurat dari traveller.',
+            'message' => $validated['message'] ?? 'SOS alert from traveller.',
             'status' => 'open',
         ]);
 
-        return response()->json(['message' => 'Sinyal darurat terkirim.', 'sos_id' => $sos->id], 201);
+        return response()->json(['message' => 'SOS alert sent.', 'sos_id' => $sos->id], 201);
     }
 }

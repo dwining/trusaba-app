@@ -1,14 +1,14 @@
 @extends('layouts.app', ['navActive' => 'home'])
-@section('title', 'TruSaba · Pembayaran')
+@section('title', 'TruSaba · Payment')
 @section('content')
 
 <div class="app-header" data-od-id="payment-header">
-    <a class="icon-btn" href="javascript:history.back()" aria-label="Kembali">
+    <a class="icon-btn" href="javascript:history.back()" aria-label="Back">
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </a>
     <div class="title-block">
         <p class="eyebrow">Checkout</p>
-        <h1>Ringkasan bayar</h1>
+        <h1>Payment summary</h1>
     </div>
 </div>
 
@@ -24,13 +24,13 @@
                     @else
                         {{ request('booking_type') === 'hotel' ? 'Seminyak Palm Hotel' : 'Booking' }}
                     @endif
-                    · {{ request('nights', 2) }} malam
+                    · {{ request('nights', 2) }} nights
                 </p>
                 <p class="caption" style="margin-top:4px">
                     @if(isset($booking) && $booking->check_in_date)
                         {{ $booking->check_in_date->format('d M') }} – {{ $booking->check_out_date?->format('d M Y') }}
                     @else
-                        {{ request('check_in', '12 Agu') }} – {{ request('check_out', '14 Agu 2026') }}
+                        {{ request('check_in', '12 Aug') }} – {{ request('check_out', '14 Aug 2026') }}
                     @endif
                 </p>
             </div>
@@ -50,18 +50,18 @@
         @endphp
 
         <div class="card-soft stack-sm" data-od-id="payment-breakdown">
-            <div class="row-between small"><span class="muted">Harga kamar ({{ request('nights', 2) }}×)</span><span class="mono">Rp {{ number_format($amount, 0, ',', '.') }}</span></div>
-            <div class="row-between small"><span class="muted">Pajak & service</span><span class="mono">Rp {{ number_format($tax, 0, ',', '.') }}</span></div>
-            <div class="row-between small"><span class="muted">Biaya platform</span><span class="mono">Rp {{ number_format($fee, 0, ',', '.') }}</span></div>
-            <div class="row-between small"><span class="muted">Diskon AI first book</span><span class="mono" style="color:var(--success)">− Rp {{ number_format($discount, 0, ',', '.') }}</span></div>
+            <div class="row-between small"><span class="muted">Room price ({{ request('nights', 2) }}×)</span><span class="mono">Rp {{ number_format($amount, 0, ',', '.') }}</span></div>
+            <div class="row-between small"><span class="muted">Tax & service</span><span class="mono">Rp {{ number_format($tax, 0, ',', '.') }}</span></div>
+            <div class="row-between small"><span class="muted">Platform fee</span><span class="mono">Rp {{ number_format($fee, 0, ',', '.') }}</span></div>
+            <div class="row-between small"><span class="muted">AI first book discount</span><span class="mono" style="color:var(--success)">− Rp {{ number_format($discount, 0, ',', '.') }}</span></div>
             <div style="height:1px;background:var(--border);margin:6px 0"></div>
             <div class="row-between">
-                <span style="font-weight:600">Total bayar</span>
+                <span style="font-weight:600">Total</span>
                 <span class="mono" style="font-size:18px;font-weight:600;color:var(--accent-hex)" data-od-id="payment-total">Rp {{ number_format($total, 0, ',', '.') }}</span>
             </div>
         </div>
 
-        <h2 style="margin:20px 0 10px">Metode pembayaran</h2>
+        <h2 style="margin:20px 0 10px">Payment method</h2>
         <div class="stack" id="payMethods" data-od-id="pay-methods">
             <label class="room-opt selected" onclick="selectPay(this)">
                 <input type="radio" name="pay" value="E-Wallet" checked />
@@ -71,16 +71,16 @@
                 </div>
             </label>
             <label class="room-opt" onclick="selectPay(this)">
-                <input type="radio" name="pay" value="Transfer Bank" />
+                <input type="radio" name="pay" value="Bank Transfer" />
                 <div>
-                    <h3>Transfer bank</h3>
+                    <h3>Bank transfer</h3>
                     <p class="small muted">VA BCA · Mandiri · BNI</p>
                 </div>
             </label>
             <label class="room-opt" onclick="selectPay(this)">
-                <input type="radio" name="pay" value="Kartu Kredit" />
+                <input type="radio" name="pay" value="Credit Card" />
                 <div>
-                    <h3>Kartu kredit / debit</h3>
+                    <h3>Credit / debit card</h3>
                     <p class="small muted">Visa · Mastercard · JCB</p>
                 </div>
             </label>
@@ -101,7 +101,7 @@
         @if($itemId)
         <input type="hidden" name="itinerary_item_id" value="{{ $itemId }}">
         @endif
-        <button type="submit" class="btn btn-primary btn-block" data-od-id="btn-bayar">Bayar Sekarang</button>
+        <button type="submit" class="btn btn-primary btn-block" data-od-id="btn-bayar">Pay Now</button>
     </form>
 </div>
 

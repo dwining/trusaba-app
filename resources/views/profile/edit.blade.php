@@ -1,14 +1,14 @@
 @extends('layouts.app', ['navActive' => 'home'])
-@section('title', 'TruSaba · Edit Profil')
+@section('title', 'TruSaba · Edit Profile')
 @section('content')
 
 <div class="app-header">
-    <a class="icon-btn" href="{{ route('history') }}" aria-label="Kembali">
+    <a class="icon-btn" href="{{ route('history') }}" aria-label="Back">
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </a>
     <div class="title-block">
-        <p class="eyebrow">Profil Saya</p>
-        <h1>Edit Data Diri</h1>
+        <p class="eyebrow">My Profile</p>
+        <h1>Edit Personal Data</h1>
     </div>
 </div>
 
@@ -21,33 +21,33 @@
         <div class="pad" style="padding-top:16px">
             {{-- User Info --}}
             <div class="field">
-                <label class="field-label" for="name">Nama lengkap</label>
-                <input class="input" id="name" name="name" type="text" value="{{ old('name', $user->name) }}" placeholder="Nama kamu" />
+                <label class="field-label" for="name">Full name</label>
+                <input class="input" id="name" name="name" type="text" value="{{ old('name', $user->name) }}" placeholder="Your name" />
             </div>
             <div class="field">
                 <label class="field-label" for="email">Email</label>
-                <input class="input" id="email" name="email" type="email" value="{{ old('email', $user->email) }}" placeholder="nama@email.com" />
+                <input class="input" id="email" name="email" type="email" value="{{ old('email', $user->email) }}" placeholder="name@email.com" />
             </div>
 
             <div style="height:1px;background:var(--border);margin:16px 0"></div>
 
             {{-- Profile Info --}}
             <div class="field">
-                <label class="field-label" for="birthDate">Tanggal lahir</label>
+                <label class="field-label" for="birthDate">Date of birth</label>
                 <input class="input" id="birthDate" name="birth_date" type="date" value="{{ old('birth_date', $user->travellerProfile?->birth_date?->format('Y-m-d')) }}" />
             </div>
 
             <div class="field">
-                <label class="field-label" for="phone">No. Telepon</label>
+                <label class="field-label" for="phone">Phone number</label>
                 <input class="input" id="phone" name="phone" type="text" value="{{ old('phone', $user->travellerProfile?->phone) }}" placeholder="0812xxxx" />
             </div>
 
             <div class="field">
-                <label class="field-label">Hobby</label>
+                <label class="field-label">Hobbies</label>
                 <div class="chips" id="hobbyChips">
                     @php $selectedHobbies = old('hobbies', $user->travellerProfile?->hobbies ?? []); @endphp
-                    @foreach(['Fotografi', 'Kuliner', 'Snorkeling', 'Hiking', 'Belanja', 'Yoga', 'Musik', 'Surfing', 'Diving', 'Camping'] as $h)
-                    <button type="button" class="chip {{ in_array($h, $selectedHobbies) ? 'active' : '' }}" data-v="{{ $h }}" onclick="this.classList.toggle('active')">{{ $h }}</button>
+                    @foreach(['Fotografi' => 'Photography', 'Kuliner' => 'Culinary', 'Snorkeling' => 'Snorkeling', 'Hiking' => 'Hiking', 'Belanja' => 'Shopping', 'Yoga' => 'Yoga', 'Musik' => 'Music', 'Surfing' => 'Surfing', 'Diving' => 'Diving', 'Camping' => 'Camping'] as $key => $label)
+                    <button type="button" class="chip {{ in_array($key, $selectedHobbies) ? 'active' : '' }}" data-v="{{ $key }}" onclick="this.classList.toggle('active')">{{ $label }}</button>
                     @endforeach
                 </div>
                 @foreach($selectedHobbies as $h)
@@ -56,11 +56,11 @@
             </div>
 
             <div class="field">
-                <label class="field-label">Minat</label>
+                <label class="field-label">Interests</label>
                 <div class="chips" id="interestChips">
                     @php $selectedInterests = old('interests', $user->travellerProfile?->interests ?? []); @endphp
-                    @foreach(['Pantai', 'Budaya', 'Alam', 'Nightlife', 'Wellness', 'Kuliner lokal', 'Adventure', 'Foto spot'] as $i)
-                    <button type="button" class="chip {{ in_array($i, $selectedInterests) ? 'active' : '' }}" data-v="{{ $i }}" onclick="this.classList.toggle('active')">{{ $i }}</button>
+                    @foreach(['Pantai' => 'Beach', 'Budaya' => 'Culture', 'Alam' => 'Nature', 'Nightlife' => 'Nightlife', 'Wellness' => 'Wellness', 'Kuliner lokal' => 'Local cuisine', 'Adventure' => 'Adventure', 'Foto spot' => 'Photo spots'] as $key => $label)
+                    <button type="button" class="chip {{ in_array($key, $selectedInterests) ? 'active' : '' }}" data-v="{{ $key }}" onclick="this.classList.toggle('active')">{{ $label }}</button>
                     @endforeach
                 </div>
                 @foreach($selectedInterests as $i)
@@ -69,7 +69,7 @@
             </div>
 
         <div style="padding:20px 20px calc(var(--nav-h) + var(--safe-b) + 20px)">
-            <button type="submit" class="btn btn-primary btn-block">Simpan Profil</button>
+            <button type="submit" class="btn btn-primary btn-block">Save Profile</button>
         </div>
     </form>
 </div>

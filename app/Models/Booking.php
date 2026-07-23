@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Booking extends Model
 {
@@ -14,6 +13,7 @@ class Booking extends Model
         'itinerary_id',
         'merchant_id',
         'itinerary_item_id',
+        'transaction_id',
         'booking_type',
         'check_in_date',
         'check_out_date',
@@ -56,9 +56,9 @@ class Booking extends Model
         return $this->belongsTo(ItineraryItem::class);
     }
 
-    public function transaction(): HasOne
+    public function transaction(): BelongsTo
     {
-        return $this->hasOne(Transaction::class);
+        return $this->belongsTo(Transaction::class);
     }
 
     public function expenseUploads(): HasMany

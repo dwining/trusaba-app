@@ -31,7 +31,7 @@ class AuthController extends Controller
         $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Registrasi berhasil.',
+            'message' => 'Registration successful.',
             'user' => ['id' => $user->id, 'name' => $user->name, 'email' => $user->email],
             'token' => $token,
         ], 201);
@@ -46,7 +46,7 @@ class AuthController extends Controller
 
         if (! Auth::attempt($validated)) {
             throw ValidationException::withMessages([
-                'email' => 'Email atau password salah.',
+                'email' => 'Invalid email or password.',
             ]);
         }
 
@@ -63,7 +63,7 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Berhasil logout.']);
+        return response()->json(['message' => 'Logged out successfully.']);
     }
 
     public function googleRedirect()

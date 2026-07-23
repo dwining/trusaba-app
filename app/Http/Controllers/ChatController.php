@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ChatMessage;
 use App\Services\OpenCodeClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,9 @@ class ChatController extends Controller
         // Reset activity timer on page load
         $this->touchActivity();
 
-        return view('chat');
+        $hasHistory = ChatMessage::where('user_id', Auth::id())->exists();
+
+        return view('chat.ai', compact('hasHistory'));
     }
 
     public function send(Request $request, OpenCodeClient $openCode)
@@ -26,7 +29,7 @@ class ChatController extends Controller
         $validated = $request->validate([
             'message' => ['required', 'string', 'max:1000'],
         ], [
-            'message.required' => 'Pesan tidak boleh kosong.',
+            'message.required' => 'Message cannot be empty.',
         ]);
 
         $user = Auth::user();
@@ -35,7 +38,7 @@ class ChatController extends Controller
         // Build travel-focused context
         $context = [
             'user_name' => $user->name,
-            'travel_status' => 'Sedang merencanakan perjalanan',
+            'travel_status' => 'Planning a trip',
         ];
 
         $profile = $user->travellerProfile;
@@ -44,10 +47,10 @@ class ChatController extends Controller
             $interests = $profile->interests ?? [];
 
             $context['user_profile'] = [
-                'usia' => $profile->birth_date ? $profile->birth_date->age.' tahun' : 'tidak diketahui',
+                'usia' => $profile->birth_date ? $profile->birth_date->age.' years' : 'unknown',
                 'hobi' => $hobbies,
                 'minat' => $interests,
-                'budget_default' => $profile->default_budget ? 'Rp '.number_format($profile->default_budget, 0, ',', '.') : 'tidak ditentukan',
+                'budget_default' => $profile->default_budget ? 'Rp '.number_format($profile->default_budget, 0, ',', '.') : 'not specified',
             ];
         }
 
@@ -61,10 +64,10 @@ class ChatController extends Controller
             $context['active_trip'] = [
                 'destination' => $activeItinerary->destination,
                 'tanggal' => $activeItinerary->start_date->format('d M').' - '.$activeItinerary->end_date->format('d M Y'),
-                'durasi' => $activeItinerary->duration_days.' hari',
-                'peserta' => $activeItinerary->total_participants.' orang',
-                'budget' => $activeItinerary->budget_input ? 'Rp '.number_format($activeItinerary->budget_input, 0, ',', '.') : 'tidak ditentukan',
-                'status' => $activeItinerary->status === 'ongoing' ? 'sedang berjalan' : 'direncanakan',
+                'durasi' => $activeItinerary->duration_days.' days',
+                'peserta' => $activeItinerary->total_participants.' people',
+                'budget' => $activeItinerary->budget_input ? 'Rp '.number_format($activeItinerary->budget_input, 0, ',', '.') : 'not specified',
+                'status' => $activeItinerary->status === 'ongoing' ? 'in progress' : 'planned',
             ];
 
             // Include a few itinerary items for reference
@@ -87,22 +90,164 @@ class ChatController extends Controller
             $reply = $openCode->chat($validated['message'], $context);
         } catch (\Exception $e) {
             $replies = [
-                'Baik, aku catat. Mau tanya soal itinerary, destinasi, atau booking?',
-                'Untuk rekomendasi wisata di '.($activeItinerary?->destination ?? 'destinasi').', aku sarankan cek itinerary-mu dulu ya.',
-                'Voucher aktifmu bisa dicek di dashboard Hari Ini. Ada yang bisa dibantu?',
-                'Trip-mu masih berjalan lancar. Butuh rekomendasi resto atau tempat wisata?',
+                'Got it, noted! Would you like to ask about your itinerary, destination, or booking?',
+                'For recommendations in '.($activeItinerary?->destination ?? 'your destination').', I suggest checking your itinerary first.',
+                'Your active vouchers can be checked on the Today dashboard. How can I help?',
+                'Your trip is going smoothly. Need restaurant or attraction recommendations?',
             ];
             $reply = $replies[array_rand($replies)];
         }
 
+        // Save user message to DB
+        ChatMessage::create([
+            'user_id' => $user->id,
+            'role' => 'user',
+            'content' => $validated['message'],
+        ]);
+
+        // Beautify the AI reply (markdown → HTML)
+        $reply = $this->beautifyChatReply($reply);
+
+        // Save AI reply to DB
+        ChatMessage::create([
+            'user_id' => $user->id,
+            'role' => 'ai',
+            'content' => $reply,
+        ]);
+
         if ($request->wantsJson() || $request->ajax()) {
             return response()->json([
                 'reply' => $reply,
+                'raw' => false,
                 'time' => now()->format('H:i'),
             ]);
         }
 
         return back()->with('reply', $reply);
+    }
+
+    /**
+     * Beautify an AI chat reply by converting markdown-like syntax to clean HTML.
+     * Handles: **bold**, *italic*, - bullet lists, numbered lists, and line breaks.
+     */
+    protected function beautifyChatReply(string $text): string
+    {
+        // Escape any existing HTML for safety
+        $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+
+        $lines = explode("\n", $text);
+        $result = [];
+        $inUl = false;
+        $inOl = false;
+        $prevEmpty = false;
+
+        foreach ($lines as $line) {
+            $trimmed = trim($line);
+
+            // Empty line → paragraph break; close any open lists
+            if ($trimmed === '') {
+                if ($inUl) {
+                    $result[] = '</ul>';
+                    $inUl = false;
+                }
+                if ($inOl) {
+                    $result[] = '</ol>';
+                    $inOl = false;
+                }
+                if (! $prevEmpty && ! empty($result)) {
+                    $result[] = '<br>';
+                }
+                $prevEmpty = true;
+
+                continue;
+            }
+            $prevEmpty = false;
+
+            // Bullet list: "- text" or "* text"
+            if (preg_match('/^[-*]\s+(.+)$/', $trimmed, $m)) {
+                if (! $inUl) {
+                    $result[] = '<ul>';
+                    $inUl = true;
+                }
+                if ($inOl) {
+                    $result[] = '</ol>';
+                    $inOl = false;
+                }
+                $result[] = '<li>'.$this->formatInlineMarkdown($m[1]).'</li>';
+
+                continue;
+            }
+
+            // Numbered list: "1. text" or "1) text"
+            if (preg_match('/^\d+[.)]\s+(.+)$/', $trimmed, $m)) {
+                if (! $inOl) {
+                    $result[] = '<ol>';
+                    $inOl = true;
+                }
+                if ($inUl) {
+                    $result[] = '</ul>';
+                    $inUl = false;
+                }
+                $result[] = '<li>'.$this->formatInlineMarkdown($m[1]).'</li>';
+
+                continue;
+            }
+
+            // Close any open lists before a regular paragraph
+            if ($inUl) {
+                $result[] = '</ul>';
+                $inUl = false;
+            }
+            if ($inOl) {
+                $result[] = '</ol>';
+                $inOl = false;
+            }
+
+            $result[] = '<p>'.$this->formatInlineMarkdown($trimmed).'</p>';
+        }
+
+        // Close any open lists at end
+        if ($inUl) {
+            $result[] = '</ul>';
+        }
+        if ($inOl) {
+            $result[] = '</ol>';
+        }
+
+        return implode("\n", $result);
+    }
+
+    /**
+     * Format inline markdown: **bold** and *italic*.
+     */
+    protected function formatInlineMarkdown(string $text): string
+    {
+        // Bold with ** or __
+        $text = preg_replace('/\*\*(.+?)\*\*/', '<strong>$1</strong>', $text);
+        $text = preg_replace('/__(.+?)__/', '<strong>$1</strong>', $text);
+        // Italic with * (single, not double)
+        $text = preg_replace('/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/', '<em>$1</em>', $text);
+        $text = preg_replace('/(?<!_)_(?!_)(.+?)(?<!_)_(?!_)/', '<em>$1</em>', $text);
+
+        return $text;
+    }
+
+    /**
+     * Fetch chat message history as JSON for the current user.
+     */
+    public function history()
+    {
+        $messages = ChatMessage::where('user_id', Auth::id())
+            ->orderBy('created_at', 'asc')
+            ->get(['role', 'content', 'created_at']);
+
+        return response()->json([
+            'messages' => $messages->map(fn ($m) => [
+                'role' => $m->role,
+                'content' => $m->content,
+                'time' => $m->created_at->format('H:i'),
+            ]),
+        ]);
     }
 
     /**
@@ -145,6 +290,6 @@ class ChatController extends Controller
 
         Cache::forget('chat_activity_'.Auth::id());
 
-        return response()->json(['message' => 'Sesi chat diakhiri.']);
+        return response()->json(['message' => 'Chat session ended.']);
     }
 }

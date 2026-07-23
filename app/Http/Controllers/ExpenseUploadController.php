@@ -24,11 +24,11 @@ class ExpenseUploadController extends Controller
             'description' => ['nullable', 'string', 'max:255'],
             'category' => ['required', 'in:Akomodasi,Makan,Wisata,Transport,Oleh-oleh,Lainnya'],
         ], [
-            'file.required' => 'File bukti wajib diunggah.',
-            'file.mimes' => 'File harus JPG, PNG, atau PDF.',
-            'file.max' => 'File maksimal 5 MB.',
-            'amount.required' => 'Nominal wajib diisi.',
-            'category.required' => 'Kategori wajib dipilih.',
+            'file.required' => 'Proof file is required.',
+            'file.mimes' => 'File must be JPG, PNG, or PDF.',
+            'file.max' => 'File must not exceed 5 MB.',
+            'amount.required' => 'Amount is required.',
+            'category.required' => 'Category is required.',
         ]);
 
         $path = $request->file('file')->store('expenses', 'public');
@@ -43,9 +43,9 @@ class ExpenseUploadController extends Controller
         ]);
 
         if ($request->wantsJson()) {
-            return response()->json(['message' => 'Bukti transaksi berhasil disimpan.']);
+            return response()->json(['message' => 'Transaction receipt saved successfully.']);
         }
 
-        return redirect()->route('history', ['tab' => 'tx'])->with('toast', 'Bukti transaksi berhasil disimpan.');
+        return redirect()->route('history', ['tab' => 'tx'])->with('toast', 'Transaction receipt saved successfully.');
     }
 }

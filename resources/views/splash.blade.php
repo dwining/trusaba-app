@@ -1,4 +1,4 @@
-@extends('layouts.app', ['navActive' => 'home'])
+@extends('layouts.app', ['navActive' => 'home', 'showNav' => false])
 
 @section('title', 'TruSaba')
 
@@ -11,7 +11,7 @@
         <img class="splash-logo" src="{{ asset('logo.jpeg') }}" alt="TruSaba" />
     </div>
     <h1 class="splash-title">TruSaba</h1>
-    <p class="splash-tagline">AI travel companion kamu — trip personal, dari rencana sampai pulang</p>
+    <p class="splash-tagline">Your AI travel companion — personal trips, from planning to return</p>
     <div class="splash-accent-line" aria-hidden="true"></div>
 </div>
 <p class="splash-version">v1.0</p>

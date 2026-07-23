@@ -33,8 +33,8 @@ class ProfileController extends Controller
             'interests' => ['nullable', 'array'],
             'interests.*' => ['string'],
         ], [
-            'email.unique' => 'Email sudah digunakan.',
-            'birth_date.before' => 'Tanggal lahir tidak valid.',
+            'email.unique' => 'Email is already in use.',
+            'birth_date.before' => 'Invalid birth date.',
         ]);
 
         $user = Auth::user();
@@ -62,9 +62,9 @@ class ProfileController extends Controller
         $redirectTo = $request->input('redirect_to', 'history');
 
         if ($redirectTo === 'onboarding') {
-            return redirect()->route('dashboard')->with('toast', 'Profil berhasil disimpan. Sekarang buat itinerary-mu!');
+            return redirect()->route('dashboard')->with('toast', 'Profile saved successfully. Now create your itinerary!');
         }
 
-        return redirect()->route('history')->with('toast', 'Profil berhasil disimpan.');
+        return redirect()->route('history')->with('toast', 'Profile saved successfully.');
     }
 }

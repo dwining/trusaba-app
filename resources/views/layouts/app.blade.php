@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -1034,7 +1034,7 @@
                 @auth
                 <form method="POST" action="{{ route('logout') }}" style="margin:0">
                     @csrf
-                    <button type="submit" class="icon-btn" aria-label="Keluar" style="border:none;width:36px;height:36px">
+                    <button type="submit" class="icon-btn" aria-label="Logout" style="border:none;width:36px;height:36px">
                         <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
                     </button>
                 </form>
@@ -1046,7 +1046,7 @@
 
             {{-- SOS FAB (shown on trip pages) --}}
             @if(($showSos ?? false))
-            <button type="button" class="fab-sos" id="fabSos" aria-label="Tombol SOS">
+            <button type="button" class="fab-sos" id="fabSos" aria-label="SOS Button">
                 <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.8 18a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>
                 SOS
             </button>
@@ -1058,22 +1058,22 @@
                         <div class="modal-icon">
                             <svg viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.3L2.8 18a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 4.3a2 2 0 00-3.4 0z"/></svg>
                         </div>
-                        <h2>Kirim sinyal darurat?</h2>
-                        <p>Lokasi GPS-mu akan dikirim ke kontak darurat & tim TruSaba. Hanya gunakan saat benar-benar butuh bantuan.</p>
+                        <h2>Send emergency signal?</h2>
+                        <p>Your GPS location will be sent to emergency contacts & the TruSaba team. Only use when you really need help.</p>
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-danger btn-block" id="btnSendSos">Kirim Sinyal Darurat</button>
-                            <button type="button" class="btn btn-secondary btn-block" id="btnCancelSos">Batal</button>
+                            <button type="button" class="btn btn-danger btn-block" id="btnSendSos">Send Emergency Signal</button>
+                            <button type="button" class="btn btn-secondary btn-block" id="btnCancelSos">Cancel</button>
                         </div>
                     </div>
                     <div id="sosSent" hidden>
                         <div class="modal-icon success">
                             <svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>
                         </div>
-                        <h2>Lokasi Terkirim</h2>
-                        <p>Tim darurat & kontakmu sudah menerima lokasi. Tetap di tempat yang aman jika memungkinkan.</p>
+                        <h2>Location Sent</h2>
+                        <p>Emergency team & your contacts have received your location. Stay in a safe place if possible.</p>
                         <div class="modal-actions">
-                            <button type="button" class="btn btn-primary btn-block" id="btnCloseSos">Tutup</button>
-                            <a class="btn btn-secondary btn-block" href="{{ route('chat') }}">Chat AI CS</a>
+                            <button type="button" class="btn btn-primary btn-block" id="btnCloseSos">Close</button>
+                            <a class="btn btn-secondary btn-block" href="{{ route('chat') }}">AI Support Chat</a>
                         </div>
                     </div>
                 </div>
@@ -1087,9 +1087,13 @@
                     <svg viewBox="0 0 24 24"><path d="M4 10.5L12 4l8 6.5V20a1 1 0 01-1 1h-5v-6H10v6H5a1 1 0 01-1-1v-9.5z"/></svg>
                     Home
                 </a>
-                <a class="nav-item {{ ($navActive ?? '') === 'booking' ? 'active' : '' }}" href="{{ route('bookings.index') }}">
+                <a class="nav-item {{ ($navActive ?? '') === 'cart' ? 'active' : '' }}" href="{{ route('cart.index') }}">
                     <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 5V3M16 5V3"/></svg>
-                    Booking
+                    Cart
+                    @php $cartBadgeCount = App\Models\CartItem::where('user_id', Auth::id())->count(); @endphp
+                    @if($cartBadgeCount > 0)
+                    <span class="badge badge-gold" style="position:absolute;top:-2px;right:2px;font-size:10px;min-width:18px;text-align:center">{{ $cartBadgeCount }}</span>
+                    @endif
                 </a>
                 <a class="nav-item {{ ($navActive ?? '') === 'chat' ? 'active' : '' }}" href="{{ route('chat') }}">
                     <svg viewBox="0 0 24 24"><path d="M5 18l-1 3 3-1h9a3 3 0 003-3V7a3 3 0 00-3-3H8a3 3 0 00-3 3v11z"/></svg>
@@ -1097,7 +1101,7 @@
                 </a>
                 <a class="nav-item {{ ($navActive ?? '') === 'profile' ? 'active' : '' }}" href="{{ route('history') }}">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0116 0"/></svg>
-                    Profil
+                    Profile
                 </a>
             </nav>
             @endif

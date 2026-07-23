@@ -15,13 +15,13 @@ class AuthenticatedSessionController extends Controller
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ], [
-            'email.required' => 'Email wajib diisi.',
-            'password.required' => 'Password wajib diisi.',
+            'email.required' => 'Email is required.',
+            'password.required' => 'Password is required.',
         ]);
 
         if (! Auth::attempt($validated, $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => 'Email atau password salah.',
+                'email' => 'Invalid email or password.',
             ]);
         }
 

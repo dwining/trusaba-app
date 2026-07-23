@@ -21,10 +21,10 @@ class AdminStatsWidget extends BaseWidget
                 ->icon('heroicon-o-building-storefront'),
             Stat::make('Total Itinerary', Itinerary::count())
                 ->icon('heroicon-o-map'),
-            Stat::make('Total Transaksi', Transaction::where('status', 'paid')->count())
-                ->description('Lunas')
+            Stat::make('Total Transactions', Transaction::where('status', 'paid')->count())
+                ->description('Paid')
                 ->icon('heroicon-o-banknotes'),
-            Stat::make('SOS Aktif', SosLog::where('status', 'open')->count())
+            Stat::make('Active SOS', SosLog::where('status', 'open')->count())
                 ->icon('heroicon-o-exclamation-triangle')
                 ->color('danger'),
         ];

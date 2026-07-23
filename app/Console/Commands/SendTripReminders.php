@@ -34,8 +34,8 @@ class SendTripReminders extends Command
         foreach ($itineraries as $itinerary) {
             $daysUntil = (int) $today->diffInDays(Carbon::parse($itinerary->start_date));
             $subject = $daysUntil === 1
-                ? 'Besok berangkat! — Trip ke '.$itinerary->destination
-                : '3 hari lagi! — Trip ke '.$itinerary->destination;
+                ? 'Departing tomorrow! — Trip to '.$itinerary->destination
+                : '3 days to go! — Trip to '.$itinerary->destination;
 
             try {
                 Mail::to($itinerary->user->email)

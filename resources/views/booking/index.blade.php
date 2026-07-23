@@ -1,14 +1,14 @@
 @extends('layouts.app', ['navActive' => 'booking'])
-@section('title', 'TruSaba · Booking Saya')
+@section('title', 'TruSaba · My Bookings')
 @section('content')
 
 <div class="app-header">
-    <a class="icon-btn" href="{{ route('itineraries.index') }}" aria-label="Kembali">
+    <a class="icon-btn" href="{{ route('itineraries.index') }}" aria-label="Back">
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </a>
     <div class="title-block">
         <p class="eyebrow">Booking</p>
-        <h1>Pesanan Saya</h1>
+        <h1>My Orders</h1>
     </div>
 </div>
 
@@ -27,10 +27,10 @@
                 @php
                     $statusBadges = [
                         'pending' => ['badge-warn', 'Pending'],
-                        'confirmed' => ['badge-gold', 'Dikonfirmasi'],
-                        'checked_in' => ['badge-blue', 'Check-in'],
-                        'completed' => ['badge-success', 'Selesai'],
-                        'cancelled' => ['badge-danger', 'Dibatalkan'],
+                        'confirmed' => ['badge-gold', 'Confirmed'],
+                        'checked_in' => ['badge-blue', 'Checked in'],
+                        'completed' => ['badge-success', 'Completed'],
+                        'cancelled' => ['badge-danger', 'Cancelled'],
                     ];
                     [$badgeClass, $badgeLabel] = $statusBadges[$booking->status] ?? ['badge-blue', $booking->status];
                 @endphp
@@ -40,9 +40,9 @@
         </a>
         @empty
         <div class="card" style="text-align:center;padding:40px 20px">
-            <h2>Belum ada booking</h2>
-            <p class="muted small" style="margin:8px 0 16px">Booking hotel, wisata, dan transport dari itinerary-mu.</p>
-            <a href="{{ route('itineraries.index') }}" class="btn btn-primary">Lihat Itinerary</a>
+            <h2>No bookings yet</h2>
+            <p class="muted small" style="margin:8px 0 16px">Book hotels, attractions, and transport from your itinerary.</p>
+            <a href="{{ route('itineraries.index') }}" class="btn btn-primary">View Itinerary</a>
         </div>
         @endforelse
     </div>
@@ -63,7 +63,7 @@
     </a>
     <a class="nav-item" href="{{ route('history') }}">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0116 0"/></svg>
-        Profil
+        Profile
     </a>
 </nav>
 

@@ -21,6 +21,6 @@ class RoleMiddleware
             }
         }
 
-        return response()->json(['message' => 'Akses ditolak. Anda tidak memiliki izin.'], 403);
+        return response()->json(['message' => 'Access denied. You do not have permission.'], 403);
     }
 }

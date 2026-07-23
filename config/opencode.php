@@ -36,42 +36,45 @@ return [
 
     // System prompt template for itinerary generation
     'itinerary_system_prompt' => <<<'PROMPT'
-Kamu adalah asisten perencana perjalanan wisata profesional untuk traveller Indonesia.
-Tugasmu adalah membuat itinerary perjalanan yang personal, realistis, dan menarik.
+You are a professional travel planning assistant.
+Your task is to create a personal, realistic, and engaging travel itinerary.
 
-Output HARUS HANYA JSON valid — tanpa teks pembuka, tanpa markdown, tanpa penjelasan.
-Jangan gunakan ```json atau tag apapun. Hanya JSON murni.
-Gunakan bahasa Indonesia untuk semua deskripsi (name, description, tips, theme, summary).
+Output MUST BE ONLY valid JSON — no introductory text, no markdown, no explanations.
+Do not use ```json or any tags. Only pure JSON.
+Use English for all descriptions (name, description, tips, theme, summary).
 
-PENTING:
-- Gunakan nama tempat dan lokasi yang SPESIFIK dan REALISTIS (contoh: "Warung Mak Beng, Sanur" bukan "Restoran Lokal")
-- Setiap item HARUS punya lokasi spesifik (nama jalan/kawasan)
-- Harga estimasi HARUS masuk akal untuk kota tersebut
+IMPORTANT:
+- The user prompt will contain an "AVAILABLE BOOKABLE MERCHANTS" section listing real merchants.
+- For any itinerary item where is_bookable is true, use the EXACT merchant name from that list.
+- NEVER invent or approximate a bookable merchant name not in the provided list.
+- If no merchant in the list fits a recommendation need, set is_bookable to false and suggest freely.
+- Each item MUST have a specific location (street/area name).
+- Estimated prices MUST be reasonable for that city and consistent with the listed merchant prices.
 PROMPT,
 
     // JSON schema for itinerary response
     'itinerary_json_schema' => [
-        'title' => 'string - judul itinerary',
+        'title' => 'string - itinerary title',
         'destination' => 'string',
-        'total_estimated_budget' => 'integer - total dalam Rupiah',
+        'total_estimated_budget' => 'integer - total in Rupiah',
         'currency' => 'IDR',
-        'summary' => 'string - ringkasan singkat perjalanan',
+        'summary' => 'string - brief trip summary',
         'days' => [
             [
-                'day' => 'integer - nomor hari',
+                'day' => 'integer - day number',
                 'date' => 'string - YYYY-MM-DD',
-                'theme' => 'string - tema hari ini',
+                'theme' => 'string - theme of the day',
                 'schedule' => [
                     [
                         'time' => 'string - HH:MM',
                         'type' => 'enum: hotel|restaurant|attraction|transport|shopping|other',
-                        'name' => 'string - nama tempat/layanan',
-                        'description' => 'string - deskripsi singkat',
-                        'location' => 'string - alamat atau area',
-                        'estimated_cost' => 'integer - estimasi biaya dalam Rupiah',
-                        'duration_minutes' => 'integer - estimasi durasi',
+                        'name' => 'string - place/service name',
+                        'description' => 'string - short description',
+                        'location' => 'string - address or area',
+                        'estimated_cost' => 'integer - estimated cost in Rupiah',
+                        'duration_minutes' => 'integer - estimated duration',
                         'is_bookable' => 'boolean',
-                        'tips' => 'string|null - tips khusus',
+                        'tips' => 'string|null - special tips',
                     ],
                 ],
                 'daily_estimated_cost' => 'integer',

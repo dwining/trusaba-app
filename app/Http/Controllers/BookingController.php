@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Itinerary;
+use App\Models\ItineraryItem;
 use App\Models\Merchant;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -36,9 +39,81 @@ class BookingController extends Controller
         $itemId = $request->query('item_id');
         $type = $request->query('type', 'hotel');
 
-        $merchant = $merchantId ? Merchant::with('merchantRooms')->findOrFail($merchantId) : null;
+        $itineraryItem = $itemId
+            ? ItineraryItem::with('itinerary')->find($itemId)
+            : null;
 
-        return view('booking.hotel-detail', compact('merchant', 'itemId', 'type'));
+        if ($merchantId) {
+            $merchant = Merchant::with(['merchantRooms', 'merchantVehicles'])->findOrFail($merchantId);
+
+            // Load itinerary context (via item or directly)
+            $itineraryId = $request->query('itinerary_id');
+            $itinerary = $itineraryItem?->itinerary
+                ?? ($itineraryId ? Itinerary::select('id', 'title', 'destination', 'start_date', 'end_date')->find($itineraryId) : null);
+
+            // Check for explicit date params (additional hotel bookings from coverage gaps)
+            $paramCheckIn = $request->query('check_in');
+            $paramCheckOut = $request->query('check_out');
+
+            if ($paramCheckIn && $paramCheckOut) {
+                $defaultCheckIn = $paramCheckIn;
+                $defaultCheckOut = $paramCheckOut;
+            } elseif ($itineraryItem?->itinerary) {
+                $defaultCheckIn = Carbon::parse($itineraryItem->itinerary->start_date)
+                    ->addDays($itineraryItem->day_number - 1)
+                    ->format('Y-m-d');
+                $defaultCheckOut = Carbon::parse($itineraryItem->itinerary->end_date)->format('Y-m-d');
+            } elseif ($itinerary) {
+                $defaultCheckIn = Carbon::parse($itinerary->start_date)->format('Y-m-d');
+                $defaultCheckOut = Carbon::parse($itinerary->end_date)->format('Y-m-d');
+            } else {
+                $defaultCheckIn = now()->addDays(7)->format('Y-m-d');
+                $defaultCheckOut = Carbon::parse($defaultCheckIn)->addDays(1)->format('Y-m-d');
+            }
+
+            return view('booking.detail', compact(
+                'merchant',
+                'itinerary',
+                'itineraryItem',
+                'type',
+                'defaultCheckIn',
+                'defaultCheckOut'
+            ));
+        }
+
+        // No merchant selected yet — show merchant selection list
+        $itineraryId = $request->query('itinerary_id');
+
+        $destination = $itineraryItem?->itinerary?->destination ?? '';
+        if (! $destination && $itineraryId) {
+            $destination = Itinerary::select('destination')->find($itineraryId)?->destination ?? '';
+        }
+        $cityHint = trim(explode(',', $destination)[0] ?? '');
+
+        $availableMerchants = Merchant::with(['merchantRooms', 'merchantVehicles'])
+            ->where('is_active', true)
+            ->where('type', $type)
+            ->when($cityHint, fn ($q) => $q->where(
+                fn ($q) => $q->where('city', 'LIKE', "%{$cityHint}%")
+                    ->orWhere('province', 'LIKE', "%{$cityHint}%")
+            ))
+            ->limit(10)
+            ->get();
+
+        if ($availableMerchants->isEmpty()) {
+            $availableMerchants = Merchant::with(['merchantRooms', 'merchantVehicles'])
+                ->where('is_active', true)
+                ->where('type', $type)
+                ->limit(10)
+                ->get();
+        }
+
+        return view('booking.detail', compact(
+            'availableMerchants',
+            'itineraryItem',
+            'type',
+            'itineraryId'
+        ));
     }
 
     public function store(Request $request)
@@ -55,8 +130,8 @@ class BookingController extends Controller
             'amount' => ['required', 'integer', 'min:1'],
             'payment_method' => ['required', 'string'],
         ], [
-            'amount.required' => 'Jumlah pembayaran wajib diisi.',
-            'payment_method.required' => 'Metode pembayaran wajib dipilih.',
+            'amount.required' => 'Payment amount is required.',
+            'payment_method.required' => 'Payment method is required.',
         ]);
 
         $user = Auth::user();

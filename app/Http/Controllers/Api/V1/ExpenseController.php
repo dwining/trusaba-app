@@ -28,6 +28,6 @@ class ExpenseController extends Controller
             'description' => $validated['description'] ?? null,
         ]);
 
-        return response()->json(['message' => 'Bukti transaksi berhasil disimpan.', 'id' => $upload->id], 201);
+        return response()->json(['message' => 'Transaction receipt saved successfully.', 'id' => $upload->id], 201);
     }
 }

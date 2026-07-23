@@ -18,6 +18,7 @@ class Merchant extends Model
         'country',
         'phone',
         'description',
+        'profile_tags',
         'logo',
         'is_active',
         'wallet_balance',
@@ -27,6 +28,7 @@ class Merchant extends Model
     {
         return [
             'is_active' => 'boolean',
+            'profile_tags' => 'array',
         ];
     }
 

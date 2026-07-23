@@ -21,8 +21,8 @@ class TripReminder extends Mailable
     public function envelope(): Envelope
     {
         $subject = $this->daysUntil === 1
-            ? 'Besok berangkat! — Trip ke '.$this->itinerary->destination
-            : '3 hari lagi! — Trip ke '.$this->itinerary->destination;
+            ? 'Departing tomorrow! — Trip to '.$this->itinerary->destination
+            : '3 days to go! — Trip to '.$this->itinerary->destination;
 
         return new Envelope(subject: $subject);
     }

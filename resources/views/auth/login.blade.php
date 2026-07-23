@@ -1,4 +1,4 @@
-@extends('layouts.app', ['navActive' => 'home'])
+@extends('layouts.app', ['navActive' => 'home', 'showNav' => false])
 
 @section('title', 'TruSaba · Login & Sign Up')
 
@@ -12,14 +12,14 @@
 <div class="app-body no-nav">
     {{-- Hero --}}
     <div class="auth-hero">
-        <h1>Selamat datang</h1>
-        <p id="authSubtitle">Masuk untuk menyimpan itinerary AI & booking trip-mu.</p>
+        <h1>Welcome</h1>
+        <p id="authSubtitle">Sign in to save AI itineraries & your trip bookings.</p>
     </div>
 
     {{-- Tabs --}}
     <div class="auth-tabs" role="tablist">
-        <button type="button" class="auth-tab active" role="tab" aria-selected="true" data-mode="login">Masuk</button>
-        <button type="button" class="auth-tab" role="tab" aria-selected="false" data-mode="signup">Daftar</button>
+        <button type="button" class="auth-tab active" role="tab" aria-selected="true" data-mode="login">Sign In</button>
+        <button type="button" class="auth-tab" role="tab" aria-selected="false" data-mode="signup">Sign Up</button>
     </div>
 
     <div class="pad" style="padding-top:12px;padding-bottom:28px">
@@ -31,67 +31,67 @@
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            Lanjutkan dengan Google
+            Continue with Google
         </a>
 
-        <div class="auth-divider">atau email</div>
+        <div class="auth-divider">or email</div>
 
         {{-- Login Form --}}
         <form id="formLogin" method="POST" action="{{ route('login') }}" novalidate>
             @csrf
             <div class="field">
                 <label class="field-label" for="loginEmail">Email</label>
-                <input class="input" id="loginEmail" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required />
+                <input class="input" id="loginEmail" name="email" type="email" autocomplete="email" placeholder="name@email.com" required />
                 @error('email')<p class="caption" style="color:var(--danger)">{{ $message }}</p>@enderror
             </div>
             <div class="field">
                 <label class="field-label" for="loginPass">Password</label>
                 <div class="password-wrap">
-                    <input class="input" id="loginPass" name="password" type="password" autocomplete="current-password" placeholder="Minimal 8 karakter" required />
-                    <button type="button" class="password-toggle" data-target="loginPass" aria-label="Tampilkan password">
+                    <input class="input" id="loginPass" name="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" required />
+                    <button type="button" class="password-toggle" data-target="loginPass" aria-label="Show password">
                         <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                 </div>
                 <div class="row-between" style="margin-top:8px">
                     <label class="small muted" style="display:flex;align-items:center;gap:6px;cursor:pointer">
-                        <input type="checkbox" name="remember" style="accent-color:var(--accent-hex)" /> Ingat saya
+                        <input type="checkbox" name="remember" style="accent-color:var(--accent-hex)" /> Remember me
                     </label>
-                    <button type="button" class="btn btn-ghost btn-sm" style="min-height:32px;padding:0 4px">Lupa password?</button>
+                    <button type="button" class="btn btn-ghost btn-sm" style="min-height:32px;padding:0 4px">Forgot password?</button>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Masuk</button>
-            <p class="auth-footer">Belum punya akun? <a href="#" id="linkToSignup">Daftar gratis</a></p>
+            <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            <p class="auth-footer">Don't have an account? <a href="#" id="linkToSignup">Sign up free</a></p>
         </form>
 
         {{-- Sign Up Form --}}
         <form id="formSignup" method="POST" action="{{ route('register') }}" hidden novalidate>
             @csrf
             <div class="field">
-                <label class="field-label" for="signupName">Nama lengkap</label>
-                <input class="input" id="signupName" name="name" type="text" autocomplete="name" placeholder="Nama kamu" required />
+                <label class="field-label" for="signupName">Full name</label>
+                <input class="input" id="signupName" name="name" type="text" autocomplete="name" placeholder="Your name" required />
             </div>
             <div class="field">
                 <label class="field-label" for="signupEmail">Email</label>
-                <input class="input" id="signupEmail" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required />
+                <input class="input" id="signupEmail" name="email" type="email" autocomplete="email" placeholder="name@email.com" required />
             </div>
             <div class="field">
                 <label class="field-label" for="signupPass">Password</label>
                 <div class="password-wrap">
-                    <input class="input" id="signupPass" name="password" type="password" autocomplete="new-password" placeholder="Minimal 8 karakter" required minlength="8" />
-                    <button type="button" class="password-toggle" data-target="signupPass" aria-label="Tampilkan password">
+                    <input class="input" id="signupPass" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" required minlength="8" />
+                    <button type="button" class="password-toggle" data-target="signupPass" aria-label="Show password">
                         <svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
                     </button>
                 </div>
-                <p class="field-hint">Gunakan kombinasi huruf & angka agar lebih aman.</p>
+                <p class="field-hint">Use a mix of letters & numbers to make it more secure.</p>
             </div>
             <div class="field">
                 <label class="small muted" style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;line-height:1.4">
                     <input type="checkbox" name="terms" required style="accent-color:var(--accent-hex);margin-top:3px" />
-                    <span>Saya setuju dengan <strong style="color:var(--fg)">Syarat & Kebijakan Privasi</strong> TruSaba.</span>
+                    <span>I agree to <strong style="color:var(--fg)">Terms & Privacy Policy</strong> of TruSaba.</span>
                 </label>
             </div>
-            <button type="submit" class="btn btn-primary btn-block">Buat akun</button>
-            <p class="auth-footer">Sudah punya akun? <a href="#" id="linkToLogin">Masuk</a></p>
+            <button type="submit" class="btn btn-primary btn-block">Create account</button>
+            <p class="auth-footer">Already have an account? <a href="#" id="linkToLogin">Sign In</a></p>
         </form>
     </div>
 </div>
@@ -115,8 +115,8 @@
                 t.setAttribute('aria-selected', on ? 'true' : 'false');
             });
             subtitle.textContent = next === 'login'
-                ? 'Masuk untuk menyimpan itinerary AI & booking trip-mu.'
-                : 'Buat akun gratis — AI TruSaba siap jadi travel companion-mu.';
+                ? 'Sign in to save AI itineraries & your trip bookings.'
+                : 'Create a free account — TruSaba AI is ready to be your travel companion.';
             document.title = next === 'login' ? 'TruSaba · Login' : 'TruSaba · Sign Up';
         }
 

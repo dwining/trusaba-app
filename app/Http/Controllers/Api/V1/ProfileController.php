@@ -30,6 +30,6 @@ class ProfileController extends Controller
             $validated
         );
 
-        return response()->json(['message' => 'Profil berhasil disimpan.', 'profile' => $profile]);
+        return response()->json(['message' => 'Profile saved successfully.', 'profile' => $profile]);
     }
 }
